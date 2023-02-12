@@ -1,0 +1,63 @@
+package ru.yandex.practicum.filmorate.Service;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.model.User;
+
+import java.time.LocalDate;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
+@Service
+public class UserService {
+    protected final Map<Integer, User> users = new HashMap<>();
+    private int startID;
+
+    UserService() {
+        startID = 1;
+    }
+
+    private static final Logger log = LoggerFactory.getLogger(UserService.class);
+
+    public Collection<User> findAll() {
+        return users.values();
+    }
+
+    public User createUser(User user) {
+
+        if (user.getName() == null || user.getName().isBlank()) {
+            user.setName(user.getLogin());
+        }
+        if (user.getBirthday().isAfter(LocalDate.now())) {
+            throw new ValidationException("Дата рождения не может быть в будущем.");
+        }
+        Integer id = startID;
+        startID++;
+        user.setId(id);
+        users.put(user.getId(), user);
+        log.debug("Данные добавлены для пользователя {}.", user.getId());
+        return user;
+    }
+
+    public User updateUser(User user) {
+
+        if (user.getBirthday().isAfter(LocalDate.now())) {
+            log.error("Введена дата рождения из будущего.", UserService.class);
+            throw new ValidationException("Дата рождения не может быть в будущем.");
+        }
+        if (!users.containsKey(user.getId())) {
+            throw new ValidationException("Пользователя с id  " + user.getId() + " не существует");
+        }
+
+        users.put(user.getId(), user);
+        log.debug("Обновлены данные пользователя {}.", user.getId());
+        return user;
+    }
+
+    public User findUserById(Integer id) {
+        return users.get(id);
+    }
+}
