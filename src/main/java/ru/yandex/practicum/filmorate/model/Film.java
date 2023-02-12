@@ -40,7 +40,7 @@ public class Film {
 
     public void setReleaseDate(LocalDate releaseDate) {
         if (releaseDate.isBefore(LocalDate.of(1895, 12, 28))) {
-            throw new ValidationException("Дата рождения не может быть раньше 28 декабря 1895 года");
+            throw new ValidationException("Фильм не может быть выпущен раньше 28 декабря 1895 года");
         }
         this.releaseDate = releaseDate;
     }

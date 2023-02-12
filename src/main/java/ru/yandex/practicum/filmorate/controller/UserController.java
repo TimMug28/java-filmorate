@@ -1,8 +1,7 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.Service.UserService;
@@ -10,10 +9,10 @@ import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
 
     @Autowired
@@ -22,8 +21,8 @@ public class UserController {
     }
 
     @GetMapping
-    public Collection<User> findAll() {
-        return userService.findAll();
+    public Collection<User> getUsers() {
+        return userService.getUsersValue();
     }
 
     @PostMapping

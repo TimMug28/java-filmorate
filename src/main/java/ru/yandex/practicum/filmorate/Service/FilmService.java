@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,17 +15,26 @@ public class FilmService {
     protected final Map<Integer, Film> films = new HashMap<>();
     private int startID;
 
-    FilmService() {
+    public FilmService() {
         startID = 1;
     }
 
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
-    public Collection<Film> findAll() {
+    public Collection<Film> getFilms() {
         return films.values();
     }
 
     public Film createFilm(Film film) {
+        if (film.getName().isBlank()) {
+            throw new ValidationException("Название не должно быть пустым");
+        }
+        if (film.getDescription().isBlank() || film.getDescription().isEmpty() || film.getDescription().length() > 200) {
+            throw new ValidationException("Описание не должно быть пустым или превышать 200 символов");
+        }
+        if (film.getDuration() <= 0) {
+            throw new ValidationException("Продолжительность фильма должна быть положительной");
+        }
         Integer id = startID;
         startID++;
         film.setId(id);
