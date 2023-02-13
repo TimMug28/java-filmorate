@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-@Slf4j
 public class UserService {
     protected final Map<Integer, User> users = new HashMap<>();
     private int startID;
