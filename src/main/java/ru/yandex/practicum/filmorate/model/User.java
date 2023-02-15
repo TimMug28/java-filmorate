@@ -5,10 +5,9 @@ import lombok.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
-@Getter
-@Setter
-@ToString
-@EqualsAndHashCode
+
+
+@Data
 @NoArgsConstructor
 public class User {
     private Integer id;
