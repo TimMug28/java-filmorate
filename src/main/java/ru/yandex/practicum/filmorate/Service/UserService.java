@@ -26,27 +26,23 @@ public class UserService {
     }
 
     public User createUser(User user) {
-        if (validate(user)) {
-            Integer id = startID;
-            startID++;
-            user.setId(id);
-            users.put(user.getId(), user);
-            log.debug("Данные добавлены для пользователя {}.", user.getId());
-            return user;
-        }
+        validate(user);
+        Integer id = startID;
+        startID++;
+        user.setId(id);
+        users.put(user.getId(), user);
+        log.debug("Данные добавлены для пользователя {}.", user.getId());
         return user;
     }
 
     public User updateUser(User user) {
-        if (validate(user)) {
-            if (!users.containsKey(user.getId())) {
-                log.error("Введен id несуществующий id", UserService.class);
-                throw new ValidationException("Пользователя с id  " + user.getId() + " не существует");
-            }
-            users.put(user.getId(), user);
-            log.debug("Обновлены данные пользователя {}.", user.getId());
-            return user;
+        validate(user);
+        if (!users.containsKey(user.getId())) {
+            log.error("Введен несуществующий id", UserService.class);
+            throw new ValidationException("Пользователя с id  " + user.getId() + " не существует");
         }
+        users.put(user.getId(), user);
+        log.debug("Обновлены данные пользователя {}.", user.getId());
         return user;
     }
 
@@ -54,7 +50,7 @@ public class UserService {
         return users.get(id);
     }
 
-    private boolean validate(User user) {
+    private void validate(User user) {
         if (user.getEmail().isBlank() || !user.getEmail().contains("@")) {
             log.error("Пустой E-mail или отсутствует символ - @", UserService.class);
             throw new ValidationException("Email не должен быть пустым и должен содержать символ @.");
@@ -70,6 +66,5 @@ public class UserService {
             log.error("Указана дата рождения из будущего", UserService.class);
             throw new ValidationException("Дата рождения не может быть в будущем.");
         }
-        return true;
     }
 }

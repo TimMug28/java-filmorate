@@ -25,39 +25,36 @@ public class FilmService {
     }
 
     public Film createFilm(Film film) {
-        if (validate(film)) {
-            Integer id = startID;
-            startID++;
-            film.setId(id);
-            films.put(film.getId(), film);
-            return film;
-        }
+        validate(film);
+        Integer id = startID;
+        startID++;
+        film.setId(id);
+        films.put(film.getId(), film);
         return film;
     }
 
     public Film updateFilm(Film film) {
-        if (validate(film)) {
-            if (!films.containsKey(film.getId())) {
-                log.error("Введён несуществующий id", FilmService.class);
-                throw new ValidationException("Фильма с id  " + film.getId() + " не существует");
-            }
-            Film updateFilm = films.get(film.getId());
-            updateFilm.setName(film.getName());
-            updateFilm.setDescription(film.getDescription());
-            updateFilm.setReleaseDate(film.getReleaseDate());
-            updateFilm.setDuration(film.getDuration());
-            films.put(film.getId(), updateFilm);
-            log.debug("Обновлены данные фильма {}.", updateFilm.getId());
-            return updateFilm;
+        validate(film);
+        if (!films.containsKey(film.getId())) {
+            log.error("Введён несуществующий id", FilmService.class);
+            throw new ValidationException("Фильма с id  " + film.getId() + " не существует");
         }
-        return film;
+        Film updateFilm = films.get(film.getId());
+        updateFilm.setName(film.getName());
+        updateFilm.setDescription(film.getDescription());
+        updateFilm.setReleaseDate(film.getReleaseDate());
+        updateFilm.setDuration(film.getDuration());
+        films.put(film.getId(), updateFilm);
+        log.debug("Обновлены данные фильма {}.", updateFilm.getId());
+        return updateFilm;
+
     }
 
     public Film findFilmById(Integer id) {
         return films.get(id);
     }
 
-    private boolean validate(Film film) {
+    private void validate(Film film) {
         if (film.getName().isBlank()) {
             log.error("Пустое имя фильма", FilmService.class);
             throw new ValidationException("Название не должно быть пустым");
@@ -70,6 +67,5 @@ public class FilmService {
             log.error("Продолжительность фильма отрицательная", FilmService.class);
             throw new ValidationException("Продолжительность фильма должна быть положительной");
         }
-        return true;
     }
 }
