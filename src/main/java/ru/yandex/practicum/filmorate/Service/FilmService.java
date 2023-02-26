@@ -1,59 +1,69 @@
 package ru.yandex.practicum.filmorate.Service;
 
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+
 @Service
 public class FilmService {
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
-    private final Map<Integer, Film> films = new HashMap<>();
-    private int startID;
+    private final FilmStorage filmStorage;
+    private final UserService userService;
 
-    public FilmService() {
-        startID = 1;
+
+    public FilmService (FilmStorage filmStorage, UserService userService){
+        this.filmStorage = filmStorage;
+        this.userService = userService;
     }
 
     public Collection<Film> getFilms() {
-        return films.values();
+        return filmStorage.getFilms();
     }
+
 
     public Film createFilm(Film film) {
         validate(film);
-        Integer id = startID;
-        startID++;
-        film.setId(id);
-        films.put(film.getId(), film);
-        return film;
+        return filmStorage.createFilm(film);
     }
 
-    public Film updateFilm(Film film) {
-        validate(film);
-        if (!films.containsKey(film.getId())) {
-            log.error("Введён несуществующий id", FilmService.class);
-            throw new ValidationException("Фильма с id  " + film.getId() + " не существует");
-        }
-        Film updateFilm = films.get(film.getId());
-        updateFilm.setName(film.getName());
-        updateFilm.setDescription(film.getDescription());
-        updateFilm.setReleaseDate(film.getReleaseDate());
-        updateFilm.setDuration(film.getDuration());
-        films.put(film.getId(), updateFilm);
-        log.debug("Обновлены данные фильма {}.", updateFilm.getId());
-        return updateFilm;
 
+   public Film updateFilm(Film film) {
+        validate(film);
+        return filmStorage.updateFilm(film);
+    }
+
+    public Film installingLike(Integer filmId, Long userId){
+        validateLike(filmId, userId);
+        User user = userService.findUserById(userId);
+        user.setLikeFilms(filmId);
+        return filmStorage.installingLike(filmId, userId);
+    }
+
+    public Film deleteLike(Integer filmId, Long userId){
+        validateLike(filmId, userId);
+        User user = userService.findUserById(userId);
+        user.deleteLikeFilm(filmId);
+        return filmStorage.deleteLike(filmId, userId);
     }
 
     public Film findFilmById(Integer id) {
-        return films.get(id);
+        return filmStorage.findFilmById(id);
     }
 
+    public Collection <Film> getPopularFilm (int count){
+        return filmStorage.getPopularFilm(count);
+    }
     private void validate(Film film) {
         if (film.getName().isBlank()) {
             log.error("Пустое имя фильма", FilmService.class);
@@ -66,6 +76,21 @@ public class FilmService {
         if (film.getDuration() <= 0) {
             log.error("Продолжительность фильма отрицательная", FilmService.class);
             throw new ValidationException("Продолжительность фильма должна быть положительной");
+        }
+    }
+
+    private void validateLike(Integer filmId, Long userId) {
+        if (userService.findUserById(userId) == null) {
+            log.error("Не найден пользователь c id {}.", userId);
+            throw new NotFoundException("Пользователь не найден " + userId);
+        }
+        if (findFilmById(filmId) == null) {
+            log.error("Не найден фильм c id {}.", filmId);
+            throw new NotFoundException("Фильм не найден " + filmId);
+        }
+        if (findFilmById(filmId).getLikesCounter().contains(userId)) {
+            log.error("Фильм уже добавлен c id {}.", filmId);
+            throw new ValidationException("Двойной лайк фильма " + filmId);
         }
     }
 }

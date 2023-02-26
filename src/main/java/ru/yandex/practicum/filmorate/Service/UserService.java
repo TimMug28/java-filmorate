@@ -2,52 +2,66 @@ package ru.yandex.practicum.filmorate.Service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class UserService {
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
-    private final Map<Integer, User> users = new HashMap<>();
-    private int startID;
+    private final UserStorage userStorage;
 
-    public UserService() {
-        startID = 1;
+    @Autowired
+    public UserService(UserStorage userStorage) {
+        this.userStorage = userStorage;
     }
 
     public Collection<User> getUsersValue() {
-        return users.values();
+        return userStorage.getUsersValue();
     }
 
     public User createUser(User user) {
         validate(user);
-        Integer id = startID;
-        startID++;
-        user.setId(id);
-        users.put(user.getId(), user);
-        log.debug("Данные добавлены для пользователя {}.", user.getId());
-        return user;
+        return userStorage.createUser(user);
     }
 
     public User updateUser(User user) {
         validate(user);
-        if (!users.containsKey(user.getId())) {
-            log.error("Введен несуществующий id", UserService.class);
-            throw new ValidationException("Пользователя с id  " + user.getId() + " не существует");
-        }
-        users.put(user.getId(), user);
-        log.debug("Обновлены данные пользователя {}.", user.getId());
-        return user;
+        return userStorage.updateUser(user);
     }
 
-    public User findUserById(Integer id) {
-        return users.get(id);
+    public User findUserById(Long id) {
+        return userStorage.findUserById(id);
+    }
+
+
+    public User addToFriend(Long userId, Long friendId) {
+        validateAdd(userId, friendId);
+        return userStorage.addToFriend(userId, friendId);
+    }
+
+    public User deleteFriend(Long userId, Long friendId) {
+        if (userStorage.checkingThePresenceOfUser(userId)) {
+            throw new NotFoundException("404");
+        }
+        if (userStorage.checkingThePresenceOfUser(friendId)) {
+            throw new NotFoundException("404");
+        }
+        return userStorage.deleteFriend(userId, friendId);
+    }
+
+    public List<User> getUserFriend(Long id) {
+        return userStorage.getUserFriend(id);
+    }
+
+    public List<User> getListOfMutualFriends(Long id, Long otherId) {
+        return userStorage.getListOfMutualFriends(id, otherId);
     }
 
     private void validate(User user) {
@@ -67,4 +81,19 @@ public class UserService {
             throw new ValidationException("Дата рождения не может быть в будущем.");
         }
     }
+
+    private void validateAdd(Long id, Long friendId) {
+        if (userStorage.findUserById(id) == null) {
+            log.error("Не найден пользователь c id {}.", id);
+            throw new NotFoundException("Пользователь " + id);
+        }
+        if (userStorage.findUserById(friendId) == null) {
+            log.error("Не найден пользователь c id {}.", friendId);
+            throw new NotFoundException("Пользователь " + friendId);
+        }
+        if (userStorage.findUserById(id).getFriends().contains(friendId)) {
+            throw new ValidationException("Пользователь c id " + friendId + " уже добавлен в друзья");
+        }
+    }
+
 }
