@@ -12,18 +12,18 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 public class User {
-    private Long id;
+    private Integer id;
     @Email
     private String email;
     @NotBlank
     private String login;
     private String name;
     private LocalDate birthday;
-    private Set<Long> friends;
+    private Set<Integer> friends = new HashSet<>();
     private Set<Integer> likeFilms;
 
 
-    public User(Long id, String email, String login, String name, LocalDate birthday) {
+    public User(Integer id, String email, String login, String name, LocalDate birthday) {
         this.id = id;
         this.email = email;
         this.login = login;
@@ -42,7 +42,7 @@ public class User {
         this.likeFilms = new HashSet<>();
     }
 
-    public User(String email, String login, String name, LocalDate birthday, Set <Long> friends, Set <Integer> likeFilms) {
+    public User(String email, String login, String name, LocalDate birthday, Set <Integer> friends, Set <Integer> likeFilms) {
         this.email = email;
         this.login = login;
         this.name = name;
@@ -51,10 +51,10 @@ public class User {
         this.likeFilms = likeFilms;
     }
 
-    public void setFriends (Long id){
+    public void setFriends (Integer id){
         friends.add(id);
     }
-    public void deleteFriends(Long id){
+    public void deleteFriends(Integer id){
         friends.remove(id);
     }
 

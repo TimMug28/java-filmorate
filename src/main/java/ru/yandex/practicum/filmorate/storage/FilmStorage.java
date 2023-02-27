@@ -12,7 +12,7 @@ public interface FilmStorage {
     public Film updateFilm(Film film);
 
     public Film findFilmById(Integer id);
-    public Film installingLike(Integer FilmId, Long userId);
-    public Film deleteLike(Integer FilmId, Long userId);
+    public Film installingLike(Integer FilmId, Integer userId);
+    public Film deleteLike(Integer FilmId, Integer userId);
     public Collection <Film> getPopularFilm (int count);
 }

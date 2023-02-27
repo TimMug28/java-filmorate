@@ -36,31 +36,39 @@ public class UserService {
         return userStorage.updateUser(user);
     }
 
-    public User findUserById(Long id) {
+    public User findUserById(Integer id) {
+        if (userStorage.findUserById(id) == null) {
+            log.error("Не найден пользователь c id {}.", id);
+            throw new ValidationException("Пользователь " + id);
+        }
         return userStorage.findUserById(id);
     }
 
 
-    public User addToFriend(Long userId, Long friendId) {
+    public User addToFriend(Integer userId, Integer friendId) {
+
         validateAdd(userId, friendId);
         return userStorage.addToFriend(userId, friendId);
     }
 
-    public User deleteFriend(Long userId, Long friendId) {
-        if (userStorage.checkingThePresenceOfUser(userId)) {
-            throw new NotFoundException("404");
-        }
-        if (userStorage.checkingThePresenceOfUser(friendId)) {
-            throw new NotFoundException("404");
-        }
+    public User deleteFriend(Integer userId, Integer friendId) {
+        validateAdd(userId, friendId);
         return userStorage.deleteFriend(userId, friendId);
     }
 
-    public List<User> getUserFriend(Long id) {
+    public List<User> getUserFriend(Integer id) {
+        if (userStorage.findUserById(id) == null) {
+            log.error("Не найден пользователь c id {}.", id);
+            throw new NotFoundException("Пользователь " + id);
+        }
         return userStorage.getUserFriend(id);
     }
 
-    public List<User> getListOfMutualFriends(Long id, Long otherId) {
+    public List<User> getListOfMutualFriends(Integer id, Integer otherId) {
+        if (userStorage.findUserById(id).getFriends() == null || userStorage.findUserById(otherId).getFriends() == null) {
+            return new ArrayList<>();
+        }
+        validateAdd(id, otherId);
         return userStorage.getListOfMutualFriends(id, otherId);
     }
 
@@ -82,7 +90,11 @@ public class UserService {
         }
     }
 
-    private void validateAdd(Long id, Long friendId) {
+    private void validateAdd(Integer id, Integer friendId) {
+        if (friendId < 0 || id < 0) {
+            log.error("id не может быть отрицательным");
+            throw new NotFoundException("404");
+        }
         if (userStorage.findUserById(id) == null) {
             log.error("Не найден пользователь c id {}.", id);
             throw new NotFoundException("Пользователь " + id);
@@ -91,9 +103,7 @@ public class UserService {
             log.error("Не найден пользователь c id {}.", friendId);
             throw new NotFoundException("Пользователь " + friendId);
         }
-        if (userStorage.findUserById(id).getFriends().contains(friendId)) {
-            throw new ValidationException("Пользователь c id " + friendId + " уже добавлен в друзья");
-        }
+
     }
 
 }

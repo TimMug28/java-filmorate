@@ -22,7 +22,7 @@ public class Film {
     private LocalDate releaseDate;
     @PositiveOrZero
     private Integer duration;
-    private Set<Long> likesCounter;
+    private Set<Integer> likesCounter;
 
 
     public Film(Integer id, String name, String description, LocalDate releaseDate, Integer duration) {
@@ -48,11 +48,11 @@ public class Film {
         }
         this.releaseDate = releaseDate;
     }
-    public void setLikesCounter (Long count){
+    public void setLikesCounter (Integer count){
         likesCounter.add(count);
     }
 
-    public void deleteLikesCounter (Long count){
+    public void deleteLikesCounter (Integer count){
         likesCounter.remove(count);
     }
 

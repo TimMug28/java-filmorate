@@ -43,14 +43,14 @@ public class FilmService {
         return filmStorage.updateFilm(film);
     }
 
-    public Film installingLike(Integer filmId, Long userId){
+    public Film installingLike(Integer filmId, Integer userId){
         validateLike(filmId, userId);
         User user = userService.findUserById(userId);
         user.setLikeFilms(filmId);
         return filmStorage.installingLike(filmId, userId);
     }
 
-    public Film deleteLike(Integer filmId, Long userId){
+    public Film deleteLike(Integer filmId, Integer userId){
         validateLike(filmId, userId);
         User user = userService.findUserById(userId);
         user.deleteLikeFilm(filmId);
@@ -79,10 +79,10 @@ public class FilmService {
         }
     }
 
-    private void validateLike(Integer filmId, Long userId) {
+    private void validateLike(Integer filmId, Integer userId) {
         if (userService.findUserById(userId) == null) {
-            log.error("Не найден пользователь c id {}.", userId);
-            throw new NotFoundException("Пользователь не найден " + userId);
+            log.error("Не найден фильм c id {}.", userId);
+            throw new NotFoundException("фильм не найден " + userId);
         }
         if (findFilmById(filmId) == null) {
             log.error("Не найден фильм c id {}.", filmId);
