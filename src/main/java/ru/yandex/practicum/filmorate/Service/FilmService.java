@@ -61,8 +61,8 @@ public class FilmService {
         return filmStorage.findFilmById(id);
     }
 
-    public Collection <Film> getPopularFilm (int count){
-        return filmStorage.getPopularFilm(count);
+    public Collection <Film> getPopularFilmCount (int count){
+        return filmStorage.getPopularFilmCount(count);
     }
     private void validate(Film film) {
         if (film.getName().isBlank()) {
@@ -80,6 +80,10 @@ public class FilmService {
     }
 
     private void validateLike(Integer filmId, Integer userId) {
+        if (filmId < 0 || userId < 0) {
+            log.error("Отрицательный id");
+            throw new ValidationException("Введен отрицательный id.");
+        }
         if (userService.findUserById(userId) == null) {
             log.error("Не найден фильм c id {}.", userId);
             throw new NotFoundException("фильм не найден " + userId);
@@ -88,7 +92,7 @@ public class FilmService {
             log.error("Не найден фильм c id {}.", filmId);
             throw new NotFoundException("Фильм не найден " + filmId);
         }
-        if (findFilmById(filmId).getLikesCounter().contains(userId)) {
+        if (findFilmById(filmId).getLikes().contains(userId)) {
             log.error("Фильм уже добавлен c id {}.", filmId);
             throw new ValidationException("Двойной лайк фильма " + filmId);
         }

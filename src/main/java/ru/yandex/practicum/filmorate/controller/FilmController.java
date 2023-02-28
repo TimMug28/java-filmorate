@@ -9,7 +9,7 @@ import javax.validation.Valid;
 import java.util.Collection;
 
 @RestController
-@RequestMapping("/films")
+@RequestMapping
 public class FilmController {
     private final FilmService filmService;
 
@@ -18,40 +18,41 @@ public class FilmController {
         this.filmService = filmService;
     }
 
-    @GetMapping
+    @GetMapping("/films")
     public Collection<Film> getFilms() {
         return filmService.getFilms();
     }
 
-    @PostMapping
+    @PostMapping("/films")
     public Film createFilm(@Valid @RequestBody Film film) {
         return filmService.createFilm(film);
     }
 
-    @PutMapping
+    @PutMapping("/films")
     public Film updateFilm(@Valid @RequestBody Film film) {
         return filmService.updateFilm(film);
     }
 
-    @GetMapping("/film/{filmId}")
-    public Film getFilm(@Valid @PathVariable("filmId") Integer filmId) {
+    @GetMapping("/films/{id}")
+    public Film getFilm(@Valid @PathVariable("id") Integer filmId) {
         return filmService.findFilmById(filmId);
     }
 
-    @PutMapping("/{id}/like/{userId}")
-    public Film installingLike(@Valid @PathVariable ("id") Integer filmId, @PathVariable ("userId") Integer userId) {
+    @PutMapping("/films/{id}/like/{userId}")
+    public Film installingLike(@Valid @PathVariable("id") Integer filmId, @PathVariable("userId") Integer userId) {
         return filmService.installingLike(filmId, userId);
     }
 
-    @DeleteMapping("{id}/like/{userId}")
-    public Film deleteLike(@Valid @PathVariable ("id") Integer filmId, @PathVariable  ("userId") Integer userId) {
+    @DeleteMapping("/films/{id}/like/{userId}")
+    public Film deleteLike(@Valid @PathVariable("id") Integer filmId, @PathVariable("userId") Integer userId) {
         return filmService.deleteLike(filmId, userId);
     }
 
-    @GetMapping("/popular?count={count}")
-    public Collection<Film> getPopularFilm(@Valid @PathVariable("count") Integer count) {
-        return filmService.getPopularFilm(count);
+    @GetMapping("/films/popular")
+    public Collection<Film> getPopularFilmCount(@RequestParam(defaultValue = "10") Integer count) {
+        if (count != 10) {
+            return filmService.getPopularFilmCount(count);
+        }
+        return filmService.getPopularFilmCount(count);
     }
 }
-
-

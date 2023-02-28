@@ -81,7 +81,7 @@ class FilmControllerTest {
         controller.createFilm(film1);
         controller.createFilm(film2);
 
-        controller.installingLike(1, 2L);
+        controller.installingLike(1, 1);
         Collection<Film> films = controller.getFilms();
         assertEquals(2, films.size(), "Хранилище пустое");
         assertTrue(films.contains(film), "Фильм не добавлен");

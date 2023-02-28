@@ -15,7 +15,6 @@ public class InMemoryUserStorage implements UserStorage {
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
     private final Map<Integer, User> users = new HashMap<>();
     private Integer startID;
-    private List<Integer> ids = new ArrayList<>();
 
 
     public InMemoryUserStorage() {
@@ -30,7 +29,6 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public User createUser(User user) {
         Integer id = startID;
-        ids.add(id);
         startID++;
         user.setId(id);
         users.put(user.getId(), user);
@@ -70,12 +68,6 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public List<User> getUserFriend(Integer id) {
-//        User user = users.get(id);
-//        List<User> friends = new ArrayList<>();
-//        for (Integer friend : user.getFriends()) {
-//            friends.add(users.get(friend));
-//        }
-//        return friends;
         List<User> friends = new ArrayList<>();
         Set<Integer> userSet = users.get(id).getFriends();
         for (Integer user : userSet) {
@@ -100,21 +92,11 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public List<User> getListOfMutualFriends(Integer userId, Integer otherId) {
-//        User user = users.get(userId);
-//        User friendUser = users.get(otherId);
-//        List<Integer> friends = new ArrayList<>(user.getFriends());
-//        friends.retainAll(friendUser.getFriends());
-//        List<User> mutualFriends = new ArrayList<>();
-//        for (Integer friend : user.getFriends()) {
-//            mutualFriends.add(users.get(friend));
-//        }
-//        return mutualFriends;3
-
         List<User> friendsNames = new ArrayList<>();
         Set<Integer> userSet = users.get(userId).getFriends();
-        Set<Integer> userSet1 = users.get(otherId).getFriends();
+        Set<Integer> otherUserSet = users.get(otherId).getFriends();
         for (Integer user : userSet) {
-            if (userSet1.contains(user)) {
+            if (otherUserSet.contains(user)) {
                 friendsNames.add(users.get(user));
             }
         }

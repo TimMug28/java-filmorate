@@ -20,8 +20,7 @@ public class User {
     private String name;
     private LocalDate birthday;
     private Set<Integer> friends = new HashSet<>();
-    private Set<Integer> likeFilms;
-
+    private Set<Integer> likeFilms = new HashSet<>();
 
     public User(Integer id, String email, String login, String name, LocalDate birthday) {
         this.id = id;

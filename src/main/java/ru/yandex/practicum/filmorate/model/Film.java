@@ -22,7 +22,7 @@ public class Film {
     private LocalDate releaseDate;
     @PositiveOrZero
     private Integer duration;
-    private Set<Integer> likesCounter;
+    private Set<Integer> likes = new HashSet<>();
 
 
     public Film(Integer id, String name, String description, LocalDate releaseDate, Integer duration) {
@@ -31,7 +31,7 @@ public class Film {
         this.description = description;
         setReleaseDate(releaseDate);
         this.duration = duration;
-        this.likesCounter = new HashSet<>();
+        this.likes = new HashSet<>();
     }
 
     public Film(String name, String description, LocalDate releaseDate, Integer duration) {
@@ -39,7 +39,16 @@ public class Film {
         this.description = description;
         setReleaseDate(releaseDate);
         this.duration = duration;
-        this.likesCounter = new HashSet<>();
+        this.likes = new HashSet<>();
+    }
+
+    public Film(Integer id, String name, String description, LocalDate releaseDate, Integer duration, Set <Integer> likes) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        setReleaseDate(releaseDate);
+        this.duration = duration;
+        this.likes = likes;
     }
 
     public void setReleaseDate(LocalDate releaseDate) {
@@ -48,15 +57,15 @@ public class Film {
         }
         this.releaseDate = releaseDate;
     }
-    public void setLikesCounter (Integer count){
-        likesCounter.add(count);
+    public void setLikes (Integer id){
+        likes.add(id);
     }
 
-    public void deleteLikesCounter (Integer count){
-        likesCounter.remove(count);
+    public void deleteLikes (Integer count){
+        likes.remove(count);
     }
 
-    public Integer getLikesCounterSize (){
-        return getLikesCounter().size();
+    public Integer getLikesSize (){
+        return getLikes().size();
     }
 }

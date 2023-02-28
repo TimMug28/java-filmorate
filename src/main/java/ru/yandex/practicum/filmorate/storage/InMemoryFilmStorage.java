@@ -1,12 +1,14 @@
 package ru.yandex.practicum.filmorate.storage;
 
 import org.apache.catalina.LifecycleState;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.stylesheets.LinkStyle;
 import ru.yandex.practicum.filmorate.Service.FilmService;
 import ru.yandex.practicum.filmorate.Service.UserService;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
@@ -15,7 +17,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
-public class InMemoryFilmStorage  implements FilmStorage  {
+public class InMemoryFilmStorage implements FilmStorage {
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
     private final Map<Integer, Film> films = new HashMap<>();
     private int startID;
@@ -30,11 +32,15 @@ public class InMemoryFilmStorage  implements FilmStorage  {
     }
 
     @Override
-    public Film createFilm(Film film) {
+    public Film createFilm(@NotNull Film film) {
         Integer id = startID;
         startID++;
         film.setId(id);
         films.put(film.getId(), film);
+        log.debug("Данные добавлены для фильма {}.", film.getId());
+        if (film.getLikes() == null) {
+
+        }
         return film;
     }
 
@@ -43,7 +49,7 @@ public class InMemoryFilmStorage  implements FilmStorage  {
     public Film updateFilm(Film film) {
         if (!films.containsKey(film.getId())) {
             log.error("Введён несуществующий id", FilmService.class);
-            throw new ValidationException("Фильма с id  " + film.getId() + " не существует");
+            throw new NotFoundException("Фильма с id  " + film.getId() + " не существует");
         }
         Film updateFilm = films.get(film.getId());
         updateFilm.setName(film.getName());
@@ -64,26 +70,31 @@ public class InMemoryFilmStorage  implements FilmStorage  {
     @Override
     public Film installingLike(Integer filmId, Integer userId) {
         Film film = films.get(filmId);
-        film.setLikesCounter(userId);
+        film.setLikes(userId);
         return film;
     }
 
     @Override
     public Film deleteLike(Integer filmId, Integer userId) {
         Film film = films.get(filmId);
-        film.deleteLikesCounter(userId);
+        film.deleteLikes(userId);
         return film;
     }
 
     @Override
-    public Collection<Film> getPopularFilm(int count) {
+    public Collection<Film> getPopularFilmCount(int count) {
         List<Film> popular = new ArrayList<>(films.values());
-      //  popular.sort(Comparator.comparing(Film::getLikesCounterSize));
-        List<Film> result = (ArrayList<Film>) popular
-                .stream().sorted(Comparator.comparing(Film::getLikesCounterSize))
-                .limit(count)
-                .collect(Collectors.toList());
-        return result;
+        return getTopNFilms(popular, count);
     }
 
+    private List<Film> getTopNFilms(List<Film> films, int n) {
+        Comparator<Film> comparator = new Comparator<Film>() {
+            @Override
+            public int compare(Film film1, Film film2) {
+                return film2.getLikes().size() - film1.getLikes().size();
+            }
+        };
+        Collections.sort(films, comparator);
+        return films.subList(0, Math.min(n, films.size()));
+    }
 }
