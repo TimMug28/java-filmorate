@@ -42,7 +42,7 @@ public class Film {
         this.likes = new HashSet<>();
     }
 
-    public Film(Integer id, String name, String description, LocalDate releaseDate, Integer duration, Set <Integer> likes) {
+    public Film(Integer id, String name, String description, LocalDate releaseDate, Integer duration, Set<Integer> likes) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -57,15 +57,16 @@ public class Film {
         }
         this.releaseDate = releaseDate;
     }
-    public void setLikes (Integer id){
+
+    public void setLikes(Integer id) {
         likes.add(id);
     }
 
-    public void deleteLikes (Integer count){
+    public void deleteLikes(Integer count) {
         likes.remove(count);
     }
 
-    public Integer getLikesSize (){
+    public Integer getLikesSize() {
         return getLikes().size();
     }
 }

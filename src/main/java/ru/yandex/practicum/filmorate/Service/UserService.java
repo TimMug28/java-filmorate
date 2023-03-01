@@ -32,6 +32,10 @@ public class UserService {
     }
 
     public User updateUser(User user) {
+        if (userStorage.findUserById(user.getId()) == null) {
+            log.error("Не найден пользователь c id {}.", user.getId());
+            throw new NotFoundException("Пользователь " + user.getId());
+        }
         validate(user);
         return userStorage.updateUser(user);
     }
@@ -39,14 +43,13 @@ public class UserService {
     public User findUserById(Integer id) {
         if (userStorage.findUserById(id) == null) {
             log.error("Не найден пользователь c id {}.", id);
-            throw new ValidationException("Пользователь " + id);
+            throw new NotFoundException("Пользователь " + id);
         }
         return userStorage.findUserById(id);
     }
 
 
     public User addToFriend(Integer userId, Integer friendId) {
-
         validateAdd(userId, friendId);
         return userStorage.addToFriend(userId, friendId);
     }
@@ -59,7 +62,7 @@ public class UserService {
     public List<User> getUserFriend(Integer id) {
         if (userStorage.findUserById(id) == null) {
             log.error("Не найден пользователь c id {}.", id);
-            throw new NotFoundException("Пользователь " + id);
+            throw new ValidationException("Пользователь " + id);
         }
         return userStorage.getUserFriend(id);
     }
@@ -93,7 +96,7 @@ public class UserService {
     private void validateAdd(Integer id, Integer friendId) {
         if (friendId < 0 || id < 0) {
             log.error("id не может быть отрицательным");
-            throw new NotFoundException("404");
+            throw new NotFoundException("Отрицательный id");
         }
         if (userStorage.findUserById(id) == null) {
             log.error("Не найден пользователь c id {}.", id);
@@ -103,7 +106,5 @@ public class UserService {
             log.error("Не найден пользователь c id {}.", friendId);
             throw new NotFoundException("Пользователь " + friendId);
         }
-
     }
-
 }

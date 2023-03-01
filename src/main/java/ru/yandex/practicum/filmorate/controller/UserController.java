@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.Service.UserService;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
 import javax.validation.Valid;
 import java.util.*;
@@ -35,26 +34,27 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}")
-    public User getUser(@Valid @PathVariable("id") Integer id){
+    public User getUser(@Valid @PathVariable("id") Integer id) {
         return userService.findUserById(id);
     }
 
-    @PutMapping ("/users/{id}/friends/{friendId}")
+    @PutMapping("/users/{id}/friends/{friendId}")
     public User addingToFriends(@Valid @PathVariable("id") Integer userId, @PathVariable("friendId") Integer friendId) {
         return userService.addToFriend(userId, friendId);
     }
 
-    @DeleteMapping  ("/users/{id}/friends/{friendId}")
-    public User deleteFriends(@Valid @PathVariable ("id") Integer userId, @PathVariable("friendId") Integer friendId) {
+    @DeleteMapping("/users/{id}/friends/{friendId}")
+    public User deleteFriends(@Valid @PathVariable("id") Integer userId, @PathVariable("friendId") Integer friendId) {
         return userService.deleteFriend(userId, friendId);
     }
 
     @GetMapping("/users/{id}/friends")
-    public List <User> getUserFriend(@Valid @PathVariable("id") Integer userId){
+    public List<User> getUserFriend(@Valid @PathVariable("id") Integer userId) {
         return userService.getUserFriend(userId);
     }
+
     @GetMapping("/users/{id}/friends/common/{otherId}")
-    public List <User> getListOfMutualFriends(@Valid @PathVariable("id") Integer userId, @PathVariable("otherId") Integer otherId){
+    public List<User> getListOfMutualFriends(@Valid @PathVariable("id") Integer userId, @PathVariable("otherId") Integer otherId) {
         return userService.getListOfMutualFriends(userId, otherId);
     }
 }

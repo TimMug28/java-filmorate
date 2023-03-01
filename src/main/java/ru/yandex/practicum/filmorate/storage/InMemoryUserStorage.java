@@ -7,7 +7,6 @@ import ru.yandex.practicum.filmorate.Service.UserService;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.time.LocalDate;
 import java.util.*;
 
 @Component
@@ -15,7 +14,6 @@ public class InMemoryUserStorage implements UserStorage {
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
     private final Map<Integer, User> users = new HashMap<>();
     private Integer startID;
-
 
     public InMemoryUserStorage() {
         startID = 1;
@@ -56,7 +54,7 @@ public class InMemoryUserStorage implements UserStorage {
     public User addToFriend(Integer userId, Integer friendId) {
         User user = users.get(userId);
         User friendUser = users.get(friendId);
-        if(users.get(userId).getFriends() != null) {
+        if (users.get(userId).getFriends() != null) {
             if (users.get(userId).getFriends().contains(friendId)) {
                 throw new ValidationException("пользователь уже добавил " + friendId + " в друзья");
             }
@@ -102,6 +100,4 @@ public class InMemoryUserStorage implements UserStorage {
         }
         return friendsNames;
     }
-
-
 }

@@ -1,20 +1,15 @@
 package ru.yandex.practicum.filmorate.storage;
 
-import org.apache.catalina.LifecycleState;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.w3c.dom.stylesheets.LinkStyle;
 import ru.yandex.practicum.filmorate.Service.FilmService;
 import ru.yandex.practicum.filmorate.Service.UserService;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Component
 public class InMemoryFilmStorage implements FilmStorage {
@@ -38,12 +33,8 @@ public class InMemoryFilmStorage implements FilmStorage {
         film.setId(id);
         films.put(film.getId(), film);
         log.debug("Данные добавлены для фильма {}.", film.getId());
-        if (film.getLikes() == null) {
-
-        }
         return film;
     }
-
 
     @Override
     public Film updateFilm(Film film) {
@@ -59,7 +50,6 @@ public class InMemoryFilmStorage implements FilmStorage {
         films.put(film.getId(), updateFilm);
         log.debug("Обновлены данные фильма {}.", updateFilm.getId());
         return updateFilm;
-
     }
 
     @Override
