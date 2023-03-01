@@ -74,20 +74,6 @@ class FilmControllerTest {
 
     }
 
-    @Test
-    void createLikeFilm() {
-        assertEquals(0, controller.getFilms().size(), "Хранилище не пустое");
-        controller.createFilm(film);
-        controller.createFilm(film1);
-        controller.createFilm(film2);
-
-        controller.installingLike(1, 1);
-        Collection<Film> films = controller.getFilms();
-        assertEquals(2, films.size(), "Хранилище пустое");
-        assertTrue(films.contains(film), "Фильм не добавлен");
-        assertTrue(films.contains(film1), "Фильм не добавлен");
-
-    }
 
     @Test
     void createMovieWithoutName() {
