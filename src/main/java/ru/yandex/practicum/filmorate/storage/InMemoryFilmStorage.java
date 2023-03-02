@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.storage;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.Service.FilmService;
 import ru.yandex.practicum.filmorate.Service.UserService;
@@ -17,6 +18,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     private final Map<Integer, Film> films = new HashMap<>();
     private int startID;
 
+    @Autowired
     public InMemoryFilmStorage() {
         startID = 1;
     }
