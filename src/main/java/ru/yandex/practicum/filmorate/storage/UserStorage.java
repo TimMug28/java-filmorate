@@ -20,7 +20,5 @@ public interface UserStorage {
 
     public User deleteFriend(Integer userId, Integer friendId);
 
-    public Boolean checkingThePresenceOfUser (Integer id);
-
     public List <User> getListOfMutualFriends (Integer id, Integer otherId);
 }

@@ -54,10 +54,8 @@ public class InMemoryUserStorage implements UserStorage {
     public User addToFriend(Integer userId, Integer friendId) {
         User user = users.get(userId);
         User friendUser = users.get(friendId);
-        if (users.get(userId).getFriends() != null) {
-            if (users.get(userId).getFriends().contains(friendId)) {
-                throw new ValidationException("пользователь уже добавил " + friendId + " в друзья");
-            }
+        if (users.get(userId).getFriends() != null && users.get(userId).getFriends().contains(friendId)) {
+            throw new ValidationException("пользователь уже добавил " + friendId + " в друзья");
         }
         user.setFriends(friendId);
         friendUser.setFriends(userId);
@@ -81,11 +79,6 @@ public class InMemoryUserStorage implements UserStorage {
         user.deleteFriends(friendId);
         friendUser.deleteFriends(userId);
         return user;
-    }
-
-    @Override
-    public Boolean checkingThePresenceOfUser(Integer id) {
-        return !users.containsKey(id);
     }
 
     @Override

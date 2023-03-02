@@ -13,7 +13,7 @@ import java.util.Set;
 @NoArgsConstructor
 public class User {
     private Integer id;
-    @Email
+    @Email (message = "Введенное значение не является адресом электронной почты.")
     private String email;
     @NotBlank
     private String login;
