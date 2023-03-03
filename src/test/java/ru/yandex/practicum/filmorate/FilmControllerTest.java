@@ -4,9 +4,13 @@ package ru.yandex.practicum.filmorate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.Service.FilmService;
+import ru.yandex.practicum.filmorate.Service.UserService;
 import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -18,6 +22,7 @@ class FilmControllerTest {
     private FilmController controller;
     private Film film;
     private Film film1;
+    private Film film2;
     private Film filmBad;
     private Film filmBad2;
     private Film filmBad3;
@@ -26,7 +31,8 @@ class FilmControllerTest {
 
     @BeforeEach
     void start() {
-        controller = new FilmController(new FilmService());
+        controller = new FilmController(new FilmService(new InMemoryFilmStorage(), new UserService(
+                new InMemoryUserStorage())));
         createFilms();
     }
 
@@ -35,6 +41,8 @@ class FilmControllerTest {
                 LocalDate.of(2012, 1, 1), 100);
         film1 = new Film("Фильм2", "Описание фильма2 до 200 символов",
                 LocalDate.of(2002, 1, 1), 102);
+        film2 = new Film("Фильм3", "Описание фильма3 до 200 символов",
+                LocalDate.of(2001, 1, 1), 102);
         filmBad = new Film("Фильм3", "Описание фильма3 более 200 символов Фильмов много — и с " +
                 "каждым годом становится всё больше. Чем их больше, тем больше разных оценок. Чем больше оценок, тем " +
                 "сложнее сделать выбор. Однако не время сдаваться! Вы напишете бэкенд для сервиса, который будет " +
@@ -65,6 +73,7 @@ class FilmControllerTest {
         assertTrue(films.contains(film1), "Фильм не добавлен");
 
     }
+
 
     @Test
     void createMovieWithoutName() {

@@ -7,6 +7,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -20,6 +22,7 @@ public class Film {
     private LocalDate releaseDate;
     @PositiveOrZero
     private Integer duration;
+    private Set<Integer> likes = new HashSet<>();
 
 
     public Film(Integer id, String name, String description, LocalDate releaseDate, Integer duration) {
@@ -28,6 +31,7 @@ public class Film {
         this.description = description;
         setReleaseDate(releaseDate);
         this.duration = duration;
+        this.likes = new HashSet<>();
     }
 
     public Film(String name, String description, LocalDate releaseDate, Integer duration) {
@@ -35,6 +39,16 @@ public class Film {
         this.description = description;
         setReleaseDate(releaseDate);
         this.duration = duration;
+        this.likes = new HashSet<>();
+    }
+
+    public Film(Integer id, String name, String description, LocalDate releaseDate, Integer duration, Set<Integer> likes) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        setReleaseDate(releaseDate);
+        this.duration = duration;
+        this.likes = likes;
     }
 
     public void setReleaseDate(LocalDate releaseDate) {
@@ -42,5 +56,17 @@ public class Film {
             throw new ValidationException("Фильм не может быть выпущен раньше 28 декабря 1895 года");
         }
         this.releaseDate = releaseDate;
+    }
+
+    public void setLikes(Integer id) {
+        likes.add(id);
+    }
+
+    public void deleteLikes(Integer count) {
+        likes.remove(count);
+    }
+
+    public Integer getLikesSize() {
+        return getLikes().size();
     }
 }

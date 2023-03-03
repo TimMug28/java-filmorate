@@ -8,10 +8,13 @@ import ru.yandex.practicum.filmorate.controller.UserController;
 
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -28,7 +31,7 @@ class UserControllerTest {
     @BeforeEach
     public void start() {
 
-        controller = new UserController(new UserService());
+        controller = new UserController( new UserService(new InMemoryUserStorage()));
         createUsers();
     }
 
@@ -60,6 +63,55 @@ class UserControllerTest {
         assertTrue(users.contains(user), "Пользователь не добавлен.");
         assertTrue(users.contains(user1), "Пользователь не добавлен.");
         assertTrue(users.contains(user2), "Пользователь не добавлен.");
+    }
+
+    @Test
+    void addFriend() {
+        assertEquals(0, controller.getUsers().size(), "Хранилище должно быть пустым.");
+        controller.createUser(user);
+        controller.createUser(user1);
+        controller.createUser(user2);
+        controller.addingToFriends(user.getId(),user1.getId());
+        List<User> friends = controller.getUserFriend(user.getId());
+        assertEquals(List.of(user1), friends, "Пользователь не найден");
+    }
+
+    @Test
+    void deleteFriend() {
+        assertEquals(0, controller.getUsers().size(), "Хранилище должно быть пустым.");
+        controller.createUser(user);
+        controller.createUser(user1);
+        controller.createUser(user2);
+        controller.addingToFriends(user.getId(),user1.getId());
+        Collection<User> users = controller.getUsers();
+        controller.addingToFriends(user.getId(),user2.getId());
+        controller.deleteFriends(user.getId(), user1.getId());
+        List<User> friends = controller.getUserFriend(user.getId());
+        assertEquals(List.of(user2), friends, "Пользователь не удалён");
+    }
+
+    @Test
+    void getUserFriends() {
+        assertEquals(0, controller.getUsers().size(), "Хранилище должно быть пустым.");
+        controller.createUser(user);
+        controller.createUser(user1);
+        controller.createUser(user2);
+        controller.addingToFriends(user.getId(),user1.getId());
+        controller.addingToFriends(user.getId(),user2.getId());
+        List<User> friends = controller.getUserFriend(user.getId());
+        assertEquals(List.of(user1, user2), friends, "Пользователь не найден");
+    }
+
+    @Test
+    void getListOfMutualFriends() {
+        assertEquals(0, controller.getUsers().size(), "Хранилище должно быть пустым.");
+        controller.createUser(user);
+        controller.createUser(user1);
+        controller.createUser(user2);
+        controller.addingToFriends(user.getId(),user1.getId());
+        controller.addingToFriends(user.getId(),user2.getId());
+        List<User> friends = controller.getListOfMutualFriends(user1.getId(), user2.getId());
+        assertEquals(List.of(user), friends, "Общие друзья не найдены");
     }
 
     @Test
