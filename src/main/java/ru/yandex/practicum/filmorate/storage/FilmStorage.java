@@ -7,9 +7,9 @@ import java.util.Collection;
 public interface FilmStorage {
     public Collection<Film> getFilms();
 
-    public Film createFilm(Film film);
+    public void createFilm(Film film);
 
-    public Film updateFilm(Film film);
+    public void updateFilm(Film film);
 
     public Film findFilmById(Integer id);
 

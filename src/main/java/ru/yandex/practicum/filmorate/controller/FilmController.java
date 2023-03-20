@@ -2,7 +2,7 @@ package ru.yandex.practicum.filmorate.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.Service.FilmService;
+import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import javax.validation.Valid;
@@ -24,13 +24,13 @@ public class FilmController {
     }
 
     @PostMapping("/films")
-    public Film createFilm(@Valid @RequestBody Film film) {
-        return filmService.createFilm(film);
+    public void createFilm(@Valid @RequestBody Film film) {
+        filmService.createFilm(film);
     }
 
     @PutMapping("/films")
-    public Film updateFilm(@Valid @RequestBody Film film) {
-        return filmService.updateFilm(film);
+    public void updateFilm(@Valid @RequestBody Film film) {
+        filmService.updateFilm(film);
     }
 
     @GetMapping("/films/{id}")

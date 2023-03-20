@@ -1,54 +1,60 @@
-package ru.yandex.practicum.filmorate.storage;
+package ru.yandex.practicum.filmorate.DAO;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
+
 
 import java.util.*;
 
+
 @Component
-public class InMemoryUserStorage implements UserStorage {
+public class UserDbStorage implements UserStorage {
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
     private final Map<Integer, User> users = new HashMap<>();
-    private Integer startID;
+
+    private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public InMemoryUserStorage() {
-        startID = 1;
+    public UserDbStorage(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
-
     @Override
     public Collection<User> getUsersValue() {
-        return users.values();
+        return jdbcTemplate.query("SELECT * FROM Users;", new BeanPropertyRowMapper<>(User.class));
     }
 
     @Override
     public void createUser(User user) {
-        Integer id = startID;
-        startID++;
-        user.setId(id);
-        users.put(user.getId(), user);
-        log.debug("Данные добавлены для пользователя {}.", user.getId());
-        }
-
-    @Override
-    public void updateUser(User user) {
-        if (!users.containsKey(user.getId())) {
-            log.error("Введен несуществующий id", UserService.class);
-            throw new ValidationException("Пользователя с id  " + user.getId() + " не существует");
-        }
-        users.put(user.getId(), user);
-        log.debug("Обновлены данные пользователя {}.", user.getId());
+        jdbcTemplate.update("INSERT INTO Users VALUES (1,?,?,?,?)", user.getEmail(), user.getLogin(), user.getName(),
+                user.getBirthday());
     }
 
     @Override
     public User findUserById(Integer id) {
-        return users.get(id);
+        return jdbcTemplate.query("SELECT * FROM Users WHERE id = ?;", new Object[]{id}, new BeanPropertyRowMapper<>(User.class))
+                .stream()
+                .findAny()
+                .orElseThrow(() -> new ValidationException("User not found with id: " + id));
     }
+
+    @Override
+    public void updateUser(User user) {
+        jdbcTemplate.update("UPDATE Users SET email = ?, login = ?,name = ?, birthday = ? WHERE id = ?",
+                user.getEmail(),
+                user.getLogin(),
+                user.getName(),
+                user.getBirthday(),
+                user.getId());
+    }
+
 
     @Override
     public User addToFriend(Integer userId, Integer friendId) {
@@ -94,3 +100,5 @@ public class InMemoryUserStorage implements UserStorage {
         return friendsNames;
     }
 }
+
+

@@ -8,9 +8,9 @@ import java.util.List;
 public interface UserStorage {
     public Collection<User> getUsersValue();
 
-    public User createUser(User user);
+    public void createUser(User user);
 
-    public User updateUser(User user);
+    public void updateUser(User user);
 
     public User findUserById(Integer id);
 

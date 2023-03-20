@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.Service;
+package ru.yandex.practicum.filmorate.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,18 +26,18 @@ public class UserService {
         return userStorage.getUsersValue();
     }
 
-    public User createUser(User user) {
+    public void createUser(User user) {
         validate(user);
-        return userStorage.createUser(user);
+        userStorage.createUser(user);
     }
 
-    public User updateUser(User user) {
+    public void updateUser(User user) {
         if (userStorage.findUserById(user.getId()) == null) {
             log.error("Не найден пользователь c id {}.", user.getId());
             throw new NotFoundException("Пользователь " + user.getId());
         }
         validate(user);
-        return userStorage.updateUser(user);
+        userStorage.updateUser(user);
     }
 
     public User findUserById(Integer id) {

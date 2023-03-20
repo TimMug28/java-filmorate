@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.Service;
+package ru.yandex.practicum.filmorate.service;
 
 
 import org.slf4j.Logger;
@@ -30,14 +30,14 @@ public class FilmService {
         return filmStorage.getFilms();
     }
 
-    public Film createFilm(Film film) {
+    public void createFilm(Film film) {
         validate(film);
-        return filmStorage.createFilm(film);
+        filmStorage.createFilm(film);
     }
 
-    public Film updateFilm(Film film) {
+    public void updateFilm(Film film) {
         validate(film);
-        return filmStorage.updateFilm(film);
+        filmStorage.updateFilm(film);
     }
 
     public Film installingLike(Integer filmId, Integer userId) {

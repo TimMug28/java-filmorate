@@ -2,7 +2,7 @@ package ru.yandex.practicum.filmorate.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.Service.UserService;
+import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.model.User;
 
 import javax.validation.Valid;
@@ -24,13 +24,13 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public User createUser(@Valid @RequestBody User user) {
-        return userService.createUser(user);
+    public void createUser(@Valid @RequestBody User user) {
+        userService.createUser(user);
     }
 
     @PutMapping("/users")
-    public User updateUser(@Valid @RequestBody User user) {
-        return userService.updateUser(user);
+    public void updateUser(@Valid @RequestBody User user) {
+        userService.updateUser(user);
     }
 
     @GetMapping("/users/{id}")
