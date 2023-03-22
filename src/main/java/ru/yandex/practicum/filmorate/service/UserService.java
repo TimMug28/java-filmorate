@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.DAO.UserDbStorage;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
@@ -15,65 +16,71 @@ import java.util.*;
 @Service
 public class UserService {
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
-    private final UserStorage userStorage;
+//    private final UserStorage userStorage;
+    private final UserDbStorage userDbStorage;
+
+//    @Autowired
+//    public UserService(UserStorage userStorage) {
+//        this.userStorage = userStorage;
+//    }
 
     @Autowired
-    public UserService(UserStorage userStorage) {
-        this.userStorage = userStorage;
+    public UserService(UserDbStorage userDbStorage) {
+        this.userDbStorage = userDbStorage;
     }
 
     public Collection<User> getUsersValue() {
-        return userStorage.getUsersValue();
+        return userDbStorage.getUsersValue();
     }
 
     public void createUser(User user) {
         validate(user);
-        userStorage.createUser(user);
+        userDbStorage.createUser(user);
     }
 
     public void updateUser(User user) {
-        if (userStorage.findUserById(user.getId()) == null) {
+        if (userDbStorage.findUserById(user.getId()) == null) {
             log.error("Не найден пользователь c id {}.", user.getId());
             throw new NotFoundException("Пользователь " + user.getId());
         }
         validate(user);
-        userStorage.updateUser(user);
+        userDbStorage.updateUser(user);
     }
 
     public User findUserById(Integer id) {
-        if (userStorage.findUserById(id) == null) {
+        if (userDbStorage.findUserById(id) == null) {
             log.error("Не найден пользователь c id {}.", id);
             throw new NotFoundException("Пользователь " + id);
         }
-        return userStorage.findUserById(id);
+        return userDbStorage.findUserById(id);
     }
 
-
-    public User addToFriend(Integer userId, Integer friendId) {
-        validateAdd(userId, friendId);
-        return userStorage.addToFriend(userId, friendId);
-    }
-
-    public User deleteFriend(Integer userId, Integer friendId) {
-        validateAdd(userId, friendId);
-        return userStorage.deleteFriend(userId, friendId);
-    }
-
-    public List<User> getUserFriend(Integer id) {
-        if (userStorage.findUserById(id) == null) {
-            log.error("Не найден пользователь c id {}.", id);
-            throw new ValidationException("Пользователь " + id);
-        }
-        return userStorage.getUserFriend(id);
-    }
-
-    public List<User> getListOfMutualFriends(Integer id, Integer otherId) {
-        if (userStorage.findUserById(id).getFriends() == null || userStorage.findUserById(otherId).getFriends() == null) {
-            return new ArrayList<>();
-        }
-        validateAdd(id, otherId);
-        return userStorage.getListOfMutualFriends(id, otherId);
-    }
+//
+//    public User addToFriend(Integer userId, Integer friendId) {
+//        validateAdd(userId, friendId);
+//        return userStorage.addToFriend(userId, friendId);
+//    }
+//
+//    public User deleteFriend(Integer userId, Integer friendId) {
+//        validateAdd(userId, friendId);
+//        return userStorage.deleteFriend(userId, friendId);
+//    }
+//
+//    public List<User> getUserFriend(Integer id) {
+//        if (userStorage.findUserById(id) == null) {
+//            log.error("Не найден пользователь c id {}.", id);
+//            throw new ValidationException("Пользователь " + id);
+//        }
+//        return userStorage.getUserFriend(id);
+//    }
+//
+//    public List<User> getListOfMutualFriends(Integer id, Integer otherId) {
+//        if (userStorage.findUserById(id).getFriends() == null || userStorage.findUserById(otherId).getFriends() == null) {
+//            return new ArrayList<>();
+//        }
+//        validateAdd(id, otherId);
+//        return userStorage.getListOfMutualFriends(id, otherId);
+//    }
 
     private void validate(User user) {
         if (user.getEmail().isBlank() || !user.getEmail().contains("@")) {
@@ -98,11 +105,11 @@ public class UserService {
             log.error("id не может быть отрицательным");
             throw new NotFoundException("Отрицательный id");
         }
-        if (userStorage.findUserById(id) == null) {
+        if (userDbStorage.findUserById(id) == null) {
             log.error("Не найден пользователь c id {}.", id);
             throw new NotFoundException("Пользователь " + id);
         }
-        if (userStorage.findUserById(friendId) == null) {
+        if (userDbStorage.findUserById(friendId) == null) {
             log.error("Не найден пользователь c id {}.", friendId);
             throw new NotFoundException("Пользователь " + friendId);
         }

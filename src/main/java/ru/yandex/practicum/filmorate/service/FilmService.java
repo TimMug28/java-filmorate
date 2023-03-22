@@ -5,6 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.DAO.FilmDbStorage;
+import ru.yandex.practicum.filmorate.DAO.UserDbStorage;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -17,58 +19,64 @@ import java.util.Collection;
 @Service
 public class FilmService {
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
-    private final FilmStorage filmStorage;
-    private final UserService userService;
+//    private final FilmStorage filmStorage;
+    private final FilmDbStorage filmDbStorage;
+
+//    @Autowired
+//    public FilmService(FilmStorage filmStorage, UserService userService) {
+//        this.filmStorage = filmStorage;
+//        this.userService = userService;
+//
+//    }
 
     @Autowired
-    public FilmService(FilmStorage filmStorage, UserService userService) {
-        this.filmStorage = filmStorage;
-        this.userService = userService;
-    }
+    public FilmService(FilmDbStorage filmDbStorage) {
+        this.filmDbStorage = filmDbStorage;
 
+    }
     public Collection<Film> getFilms() {
-        return filmStorage.getFilms();
+        return filmDbStorage.getFilms();
     }
 
     public void createFilm(Film film) {
         validate(film);
-        filmStorage.createFilm(film);
+        filmDbStorage.createFilm(film);
     }
 
     public void updateFilm(Film film) {
         validate(film);
-        filmStorage.updateFilm(film);
+        filmDbStorage.updateFilm(film);
     }
 
-    public Film installingLike(Integer filmId, Integer userId) {
-        if (findFilmById(filmId).getLikes().contains(userId)) {
-            log.error("Фильм уже добавлен c id {}.", filmId);
-            throw new ValidationException("Двойной лайк фильма " + filmId);
-        }
-        validateLike(filmId, userId);
-        User user = userService.findUserById(userId);
-        user.setLikeFilms(filmId);
-        return filmStorage.installingLike(filmId, userId);
-    }
-
-    public Film deleteLike(Integer filmId, Integer userId) {
-        validateLike(filmId, userId);
-        User user = userService.findUserById(userId);
-        user.deleteLikeFilm(filmId);
-        return filmStorage.deleteLike(filmId, userId);
-    }
-
+//    public Film installingLike(Integer filmId, Integer userId) {
+//        if (findFilmById(filmId).getLikes().contains(userId)) {
+//            log.error("Фильм уже добавлен c id {}.", filmId);
+//            throw new ValidationException("Двойной лайк фильма " + filmId);
+//        }
+//        validateLike(filmId, userId);
+//        User user = userService.findUserById(userId);
+//        user.setLikeFilms(filmId);
+//        return filmStorage.installingLike(filmId, userId);
+//    }
+//
+//    public Film deleteLike(Integer filmId, Integer userId) {
+//        validateLike(filmId, userId);
+//        User user = userService.findUserById(userId);
+//        user.deleteLikeFilm(filmId);
+//        return filmStorage.deleteLike(filmId, userId);
+//    }
+//
     public Film findFilmById(Integer id) {
-        if (filmStorage.findFilmById(id) == null) {
+        if (filmDbStorage.findFilmById(id) == null) {
             log.error("Не найден фильм c id {}.", id);
             throw new NotFoundException("Фильм " + id);
         }
-        return filmStorage.findFilmById(id);
+        return filmDbStorage.findFilmById(id);
     }
-
-    public Collection<Film> getPopularFilmCount(int count) {
-        return filmStorage.getPopularFilmCount(count);
-    }
+//
+//    public Collection<Film> getPopularFilmCount(int count) {
+//        return filmStorage.getPopularFilmCount(count);
+//    }
 
     private void validate(Film film) {
         if (film.getName().isBlank()) {
@@ -86,17 +94,17 @@ public class FilmService {
     }
 
     private void validateLike(Integer filmId, Integer userId) {
-        if (filmId < 0 || userId < 0) {
-            log.error("Отрицательный id");
-            throw new NotFoundException("Введен отрицательный id.");
-        }
-        if (userService.findUserById(userId) == null) {
-            log.error("Не найден фильм c id {}.", userId);
-            throw new NotFoundException("фильм не найден " + userId);
-        }
-        if (findFilmById(filmId) == null) {
-            log.error("Не найден фильм c id {}.", filmId);
-            throw new NotFoundException("Фильм не найден " + filmId);
-        }
+//        if (filmId < 0 || userId < 0) {
+//            log.error("Отрицательный id");
+//            throw new NotFoundException("Введен отрицательный id.");
+//        }
+//        if (userService.findUserById(userId) == null) {
+//            log.error("Не найден фильм c id {}.", userId);
+//            throw new NotFoundException("фильм не найден " + userId);
+//        }
+//        if (findFilmById(filmId) == null) {
+//            log.error("Не найден фильм c id {}.", filmId);
+//            throw new NotFoundException("Фильм не найден " + filmId);
+//        }
     }
 }
