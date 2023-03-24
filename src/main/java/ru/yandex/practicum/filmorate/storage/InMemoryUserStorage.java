@@ -51,7 +51,7 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public User addToFriend(Integer userId, Integer friendId) {
+    public void addToFriend(Integer userId, Integer friendId) {
         User user = users.get(userId);
         User friendUser = users.get(friendId);
         if (users.get(userId).getFriends() != null && users.get(userId).getFriends().contains(friendId)) {
@@ -59,7 +59,6 @@ public class InMemoryUserStorage implements UserStorage {
         }
         user.setFriends(friendId);
         friendUser.setFriends(userId);
-        return user;
     }
 
     @Override
@@ -73,12 +72,11 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public User deleteFriend(Integer userId, Integer friendId) {
+    public void deleteFriend(Integer userId, Integer friendId) {
         User user = users.get(userId);
         User friendUser = users.get(friendId);
         user.deleteFriends(friendId);
         friendUser.deleteFriends(userId);
-        return user;
     }
 
     @Override

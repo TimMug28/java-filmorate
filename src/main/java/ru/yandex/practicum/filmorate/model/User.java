@@ -10,6 +10,7 @@ import java.util.Set;
 
 
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
 public class User {
     private Integer id;
@@ -49,7 +50,9 @@ public class User {
         this.friends = friends;
         this.likeFilms = likeFilms;
     }
-        public void setFriends (Integer id){
+
+
+    public void setFriends (Integer id){
         friends.add(id);
     }
     public void deleteFriends(Integer id){

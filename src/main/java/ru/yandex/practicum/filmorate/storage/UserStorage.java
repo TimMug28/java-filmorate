@@ -14,11 +14,11 @@ public interface UserStorage {
 
     public User findUserById(Integer id);
 
-    public User addToFriend(Integer userId, Integer friendId);
+    public void addToFriend(Integer userId, Integer friendId);
 
     public List<User> getUserFriend (Integer id);
 
-    public User deleteFriend(Integer userId, Integer friendId);
+    public void deleteFriend(Integer userId, Integer friendId);
 
     public List <User> getListOfMutualFriends (Integer id, Integer otherId);
 }

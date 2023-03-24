@@ -55,32 +55,32 @@ public class UserService {
         return userDbStorage.findUserById(id);
     }
 
-//
-//    public User addToFriend(Integer userId, Integer friendId) {
-//        validateAdd(userId, friendId);
-//        return userStorage.addToFriend(userId, friendId);
-//    }
-//
-//    public User deleteFriend(Integer userId, Integer friendId) {
-//        validateAdd(userId, friendId);
-//        return userStorage.deleteFriend(userId, friendId);
-//    }
-//
-//    public List<User> getUserFriend(Integer id) {
-//        if (userStorage.findUserById(id) == null) {
-//            log.error("Не найден пользователь c id {}.", id);
-//            throw new ValidationException("Пользователь " + id);
-//        }
-//        return userStorage.getUserFriend(id);
-//    }
-//
-//    public List<User> getListOfMutualFriends(Integer id, Integer otherId) {
-//        if (userStorage.findUserById(id).getFriends() == null || userStorage.findUserById(otherId).getFriends() == null) {
-//            return new ArrayList<>();
-//        }
-//        validateAdd(id, otherId);
-//        return userStorage.getListOfMutualFriends(id, otherId);
-//    }
+
+    public void addToFriend(Integer userId, Integer friendId) {
+        validateAdd(userId, friendId);
+        userDbStorage.addToFriend(userId, friendId);
+    }
+
+    public void deleteFriend(Integer userId, Integer friendId) {
+        validateAdd(userId, friendId);
+        userDbStorage.deleteFriend(userId, friendId);
+    }
+
+    public List<User> getUserFriend(Integer id) {
+        if (userDbStorage.findUserById(id) == null) {
+            log.error("Не найден пользователь c id {}.", id);
+            throw new ValidationException("Пользователь " + id);
+        }
+        return userDbStorage.getUserFriend(id);
+    }
+
+    public List<User> getListOfMutualFriends(Integer id, Integer otherId) {
+        if (userDbStorage.findUserById(id).getFriends() == null || userDbStorage.findUserById(otherId).getFriends() == null) {
+            return new ArrayList<>();
+        }
+        validateAdd(id, otherId);
+        return userDbStorage.getListOfMutualFriends(id, otherId);
+    }
 
     private void validate(User user) {
         if (user.getEmail().isBlank() || !user.getEmail().contains("@")) {
