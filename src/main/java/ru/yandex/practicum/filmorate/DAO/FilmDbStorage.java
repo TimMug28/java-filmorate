@@ -11,11 +11,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.MPARating;
 import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -25,16 +27,16 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Component
+@Repository
 @Qualifier("FilmDbStorage")
-public class FilmDbStorage implements FilmDAO {
+public class FilmDbStorage implements FilmStorage {
+
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
     public FilmDbStorage(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
-
     @Override
     public Collection<Film> getFilms() {
         return jdbcTemplate.query("SELECT * FROM films;", new BeanPropertyRowMapper<>(Film.class));
@@ -92,6 +94,21 @@ public class FilmDbStorage implements FilmDAO {
                 .stream()
                 .findAny()
                 .orElseThrow(() -> new ValidationException("Film not found with film_id: " + id));
+    }
+
+    @Override
+    public Film installingLike(Integer FilmId, Integer userId) {
+        return null;
+    }
+
+    @Override
+    public Film deleteLike(Integer FilmId, Integer userId) {
+        return null;
+    }
+
+    @Override
+    public Collection<Film> getPopularFilmCount(int count) {
+        return null;
     }
 
 

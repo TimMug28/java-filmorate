@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
@@ -20,7 +21,7 @@ import java.util.*;
 import java.sql.Date;
 
 
-@Component
+@Repository
 @Qualifier("UserDbStorage")
 public class UserDbStorage implements UserStorage {
 
@@ -30,7 +31,6 @@ public class UserDbStorage implements UserStorage {
     public UserDbStorage(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
-
     @Override
     public Collection<User> getUsersValue() {
         return jdbcTemplate.query("SELECT * FROM users;", new BeanPropertyRowMapper<>(User.class));
