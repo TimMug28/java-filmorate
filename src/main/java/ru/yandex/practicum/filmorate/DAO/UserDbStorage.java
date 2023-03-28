@@ -124,24 +124,21 @@ public class UserDbStorage implements UserStorage {
     }
 
     @Override
-    public List<Integer> getUserFriend(Integer userId) {
+    public List<User> getUserFriend(Integer userId) {
         String sql = "SELECT u.* FROM friendship f JOIN users u ON f.friend_id = u.user_id WHERE f.user_id = ?";
 
-        String sqlFriendsByUserId = "SELECT friend_id FROM friendship WHERE user_id = ?";
-        List<Integer> friends = jdbcTemplate.query(
-                sqlFriendsByUserId, (rs, rowNum) -> rs.getInt("friend_id"), userId);
-        return friends;
-//
-//        List <User> list = jdbcTemplate.query(sql, new Object[]{userId},
-//                (resultSet, i) -> new User(
-//                        resultSet.getInt("user_id"),
-//                        resultSet.getString("email"),
-//                        resultSet.getString("login"),
-//                        resultSet.getString("user_name"),
-//                        resultSet.getDate("birthday").toLocalDate()
-//                ));
-//
-//        return list;
+
+
+        List <User> list = jdbcTemplate.query(sql, new Object[]{userId},
+                (resultSet, i) -> new User(
+                        resultSet.getInt("user_id"),
+                        resultSet.getString("email"),
+                        resultSet.getString("login"),
+                        resultSet.getString("user_name"),
+                        resultSet.getDate("birthday").toLocalDate()
+                ));
+
+        return list;
     }
 
 
@@ -156,28 +153,14 @@ public class UserDbStorage implements UserStorage {
         List<User> friendsNames = new ArrayList<>();
         User userById = findUserById(id);
         User otherUserById = findUserById(otherId);
-        List<Integer> userFriends = getUserFriend(userById.getId());
-        List<Integer> otherUserFriends = getUserFriend(otherUserById.getId());
-
-        for (Integer user : userFriends) {
+        List<User> userFriends = getUserFriend(userById.getId());
+        List<User> otherUserFriends = getUserFriend(otherUserById.getId());
+        for (User user : userFriends) {
             if (otherUserFriends.contains(user)) {
-                friendsNames.add(findUserById(user));
+                friendsNames.add(user);
             }
         }
         return friendsNames;
-
-
-
-//        User userById = findUserById(id);
-//        User otherUserById = findUserById(otherId);
-//        List<User> userFriends = getUserFriend(userById.getId());
-//        List<User> otherUserFriends = getUserFriend(otherUserById.getId());
-//        for (User user : userFriends) {
-//            if (otherUserFriends.contains(user)) {
-//                friendsNames.add(user);
-//            }
-//        }
-//        return friendsNames;
     }
 
 
