@@ -10,12 +10,14 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.MPARating;
+import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
@@ -37,9 +39,27 @@ public class FilmDbStorage implements FilmStorage {
     public FilmDbStorage(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
+
     @Override
     public Collection<Film> getFilms() {
-        return jdbcTemplate.query("SELECT * FROM films;", new BeanPropertyRowMapper<>(Film.class));
+
+        SqlRowSet filmRows = jdbcTemplate.queryForRowSet("select * from films");
+
+
+        Collection<Film> films = new ArrayList<>();
+//        while (filmRows.next()) {
+//            Film film = new Film(
+//                    filmRows.getInt("film_id"),
+//                    filmRows.getString("film_name"),
+//                    filmRows.getString("description"),
+//                    filmRows.getDate("releaseDate").toLocalDate());
+//                    filmRows.getInt("duration"),
+//                    filmRows.getString("genre"),
+//                    filmRows.getString("rating"),
+//
+//                    films.add(film);
+//        }
+        return films;
     }
 
     @Override

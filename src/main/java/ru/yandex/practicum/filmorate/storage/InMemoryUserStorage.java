@@ -27,22 +27,24 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public void createUser(User user) {
+    public User createUser(User user) {
         Integer id = startID;
         startID++;
         user.setId(id);
         users.put(user.getId(), user);
         log.debug("Данные добавлены для пользователя {}.", user.getId());
+        return user;
         }
 
     @Override
-    public void updateUser(User user) {
+    public User updateUser(User user) {
         if (!users.containsKey(user.getId())) {
             log.error("Введен несуществующий id", UserService.class);
             throw new ValidationException("Пользователя с id  " + user.getId() + " не существует");
         }
         users.put(user.getId(), user);
         log.debug("Обновлены данные пользователя {}.", user.getId());
+        return user;
     }
 
     @Override
@@ -62,13 +64,13 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public List<User> getUserFriend(Integer id) {
+    public List<Integer> getUserFriend(Integer id) {
         List<User> friends = new ArrayList<>();
         Set<Integer> userSet = users.get(id).getFriends();
         for (Integer user : userSet) {
             friends.add(users.get(user));
         }
-        return friends;
+        return null;
     }
 
     @Override

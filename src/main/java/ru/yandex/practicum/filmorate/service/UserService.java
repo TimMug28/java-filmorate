@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import ru.yandex.practicum.filmorate.DAO.UserDbStorage;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
@@ -27,18 +28,18 @@ private final UserStorage userStorage;
         return userStorage.getUsersValue();
     }
 
-    public void createUser(User user) {
+    public User createUser(User user) {
         validate(user);
-        userStorage.createUser(user);
+        return userStorage.createUser(user);
     }
 
-    public void updateUser(User user) {
+    public User updateUser(User user) {
         if (userStorage.findUserById(user.getId()) == null) {
             log.error("Не найден пользователь c id {}.", user.getId());
             throw new NotFoundException("Пользователь " + user.getId());
         }
         validate(user);
-        userStorage.updateUser(user);
+        return userStorage.updateUser(user);
     }
 
     public User findUserById(Integer id) {
@@ -108,4 +109,50 @@ private final UserStorage userStorage;
             throw new NotFoundException("Пользователь " + friendId);
         }
     }
+
+    public static void validateUser(User user) throws ValidationException {
+        if (!StringUtils.hasText(user.getEmail()) || !user.getEmail().contains("@")) {
+            log.error("User has incorrect email: {}", user);
+            throw new ValidationException("Email of the user must be indicated");
+        }
+        if (!StringUtils.hasText(user.getLogin()) || StringUtils.containsWhitespace(user.getLogin())) {
+            log.error("User has incorrect login: {}", user);
+            throw new ValidationException("Login of the user must be indicated and have no whitespaces");
+        }
+        if (!StringUtils.hasText(user.getName())) {
+            log.warn("User has blank or null name: {}", user);
+            user.setName(user.getLogin());
+        }
+        if (user.getBirthday().isAfter(LocalDate.now())) {
+            log.error("User has incorrect birthday: {}", user);
+            throw new ValidationException("Birthday must be less or equal to present time");
+        }
+    }
+
+    public static void validateCreation(List<Long> userIdList, User user) throws ValidationException {
+        if (user.getId() != null) {
+            if (userIdList.contains(user.getId())) {
+                throw new ValidationException("User is already created");
+            }
+        }
+    }
+
+    public static void validateUpdate(List<Long> userIdList, User user)
+            throws ValidationException, NotFoundException {
+        if(user.getId() == null) {
+            log.error("Film has not been created yet: {}", user);
+            throw new ValidationException("User must be created firstly");
+        }
+        if (!userIdList.contains(user.getId())) {
+            log.error("Film has not been created yet: {}", user);
+            throw new NotFoundException("User must be created firstly");
+        }
+    }
+
+    public static void validateExist(List<Long> userIdList, Long id) throws NotFoundException {
+        if(!userIdList.contains(id)) {
+            throw new NotFoundException(String.format("User with %s is not found", id));
+        }
+    }
+
 }

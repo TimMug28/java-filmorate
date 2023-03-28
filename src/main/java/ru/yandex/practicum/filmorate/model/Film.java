@@ -56,6 +56,9 @@ public class Film {
         this.rating = mpaRating;
     }
 
+    public Film(int film_id, String email, String description, LocalDate releaseDate) {
+    }
+
     public void setReleaseDate(LocalDate releaseDate) {
         if (releaseDate.isBefore(LocalDate.of(1895, 12, 28))) {
             throw new ValidationException("Фильм не может быть выпущен раньше 28 декабря 1895 года");

@@ -17,7 +17,8 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS friendship (
     friendship_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     user_id       BIGINT REFERENCES USERS (user_id),
-    friend_id     BIGINT REFERENCES USERS (user_id)
+    friend_id     BIGINT REFERENCES USERS (user_id),
+    status VARCHAR
 );
 
 CREATE TABLE IF NOT EXISTS genres (

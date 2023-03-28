@@ -24,17 +24,20 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public void createUser(@Valid @RequestBody User user) {
-        userService.createUser(user);
+    public User createUser(@Valid @RequestBody User user) {
+       return userService.createUser(user);
     }
 
     @PutMapping("/users")
-    public void updateUser(@Valid @RequestBody User user) {
-        userService.updateUser(user);
+    public User updateUser(@Valid @RequestBody User user) {
+        return userService.updateUser(user);
     }
 
     @GetMapping("/users/{id}")
     public User getUser(@Valid @PathVariable("id") Integer id) {
+        if(id == 1 ){
+            return userService.findUserById(id);
+        }
         return userService.findUserById(id);
     }
 

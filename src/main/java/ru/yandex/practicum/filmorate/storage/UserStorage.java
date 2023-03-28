@@ -8,15 +8,15 @@ import java.util.List;
 public interface UserStorage {
     public Collection<User> getUsersValue();
 
-    public void createUser(User user);
+    public User createUser(User user);
 
-    public void updateUser(User user);
+    public User updateUser(User user);
 
     public User findUserById(Integer id);
 
     public void addToFriend(Integer userId, Integer friendId);
 
-    public List<User> getUserFriend (Integer id);
+    public List<Integer> getUserFriend (Integer id);
 
     public void deleteFriend(Integer userId, Integer friendId);
 
