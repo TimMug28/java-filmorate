@@ -8,9 +8,7 @@ import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -24,39 +22,40 @@ public class Film {
     private LocalDate releaseDate;
     @PositiveOrZero
     private Integer duration;
-    private List<Integer> genre = new ArrayList<>();
-    private MPARating rating;
+    private MPA mpa;
+    private List<Genre> genres = new ArrayList<>();
 
-    public Film(Integer id, String name, String description, LocalDate releaseDate, Integer duration,
-               List <Integer> genre, MPARating rating) {
+
+
+    public Film(Integer id, String name, String description, LocalDate releaseDate, Integer duration,MPA mpa,
+               List <Genre> genres ) {
         this.id = id;
         this.name = name;
         this.description = description;
         setReleaseDate(releaseDate);
         this.duration = duration;
-        this.genre = genre;
-        this.rating = rating;
+        this.mpa = mpa;
+        this.genres = genres;
+
     }
 
-    public Film(String name, String description, LocalDate releaseDate, Integer duration,
-                List <Integer> genre,  MPARating rating) {
+    public Film(String name, String description, LocalDate releaseDate, Integer duration,MPA mpa,
+                List <Genre> genres ) {
         this.name = name;
         this.description = description;
         setReleaseDate(releaseDate);
         this.duration = duration;
-        this.genre = genre;
-        this.rating = rating;
+        this.mpa = mpa;
+        this.genres = genres;
+
     }
 
-    public Film(String name, String description, LocalDate releaseDate, int duration, MPARating mpaRating) {
+    public Film(String name, String description, LocalDate releaseDate, int duration, MPA mpa) {
         this.name = name;
         this.description = description;
         setReleaseDate(releaseDate);
         this.duration = duration;
-        this.rating = mpaRating;
-    }
-
-    public Film(int film_id, String email, String description, LocalDate releaseDate) {
+        this.mpa = mpa;
     }
 
     public void setReleaseDate(LocalDate releaseDate) {

@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS friendship (
 );
 
 CREATE TABLE IF NOT EXISTS genres (
-    genre_id  INT PRIMARY KEY,
+    genres_id  INT PRIMARY KEY,
     genre VARCHAR
 );
 
@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS films
 CREATE TABLE IF NOT EXISTS film_genres (
     film_genre_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     film_id       BIGINT REFERENCES films (film_id),
-    genre_id      INT REFERENCES genres (genre_id)
+    genres_id      INT REFERENCES genres (genres_id)
 );
 
 CREATE TABLE IF NOT EXISTS likes (

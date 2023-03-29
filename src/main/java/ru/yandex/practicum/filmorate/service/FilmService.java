@@ -30,14 +30,14 @@ public class FilmService {
         return filmStorage.getFilms();
     }
 
-    public void createFilm(Film film) {
+    public Film createFilm(Film film) {
         validate(film);
-        filmStorage.createFilm(film);
+       return filmStorage.createFilm(film);
     }
 
-    public void updateFilm(Film film) {
+    public Film updateFilm(Film film) {
         validate(film);
-        filmStorage.updateFilm(film);
+      return filmStorage.updateFilm(film);
     }
 
     public Film installingLike(Integer filmId, Integer userId) {
@@ -51,19 +51,19 @@ public class FilmService {
         return filmStorage.installingLike(filmId, userId);
     }
 
-    public Film deleteLike(Integer filmId, Integer userId) {
+    public void deleteLike(Integer filmId, Integer userId) {
 //        validateLike(filmId, userId);
 //        User user = userService.findUserById(userId);
 //        user.deleteLikeFilm(filmId);
-        return filmStorage.deleteLike(filmId, userId);
+       filmStorage.deleteLike(filmId, userId);
     }
 
-    public Film findFilmById(Integer id) {
-        if (filmStorage.findFilmById(id) == null) {
+    public Film getFilmById(Integer id) {
+        if (filmStorage.getFilmById(id) == null) {
             log.error("Не найден фильм c id {}.", id);
             throw new NotFoundException("Фильм " + id);
         }
-        return filmStorage.findFilmById(id);
+        return filmStorage.getFilmById(id);
     }
 
     public Collection<Film> getPopularFilmCount(int count) {
@@ -94,7 +94,7 @@ public class FilmService {
 //            log.error("Не найден фильм c id {}.", userId);
 //            throw new NotFoundException("фильм не найден " + userId);
 //        }
-        if (findFilmById(filmId) == null) {
+        if (getFilmById(filmId) == null) {
             log.error("Не найден фильм c id {}.", filmId);
             throw new NotFoundException("Фильм не найден " + filmId);
         }

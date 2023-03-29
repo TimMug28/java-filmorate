@@ -23,9 +23,11 @@ public class ErrorHandler {
         return new ErrorResponse("error", e.getMessage());
     }
 
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse handleError(Exception e) {
-        return new ErrorResponse("error", "INTERNAL_SERVER_ERROR");
-    }
+//    @ExceptionHandler
+//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+//    public ErrorResponse handleError(Exception e) {
+//        return new ErrorResponse("error", "INTERNAL_SERVER_ERROR");
+//    }
+
+
 }

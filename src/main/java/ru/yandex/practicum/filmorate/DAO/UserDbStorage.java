@@ -3,15 +3,12 @@ package ru.yandex.practicum.filmorate.DAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
@@ -57,14 +54,9 @@ public class UserDbStorage implements UserStorage {
         return user;
     }
 
-
     @Override
     public Collection<User> getUsersValue() {
-
-
         SqlRowSet userRows = jdbcTemplate.queryForRowSet("select * from users");
-
-
         Collection<User> users = new ArrayList<>();
         while (userRows.next()) {
             User user = new User(
@@ -116,7 +108,6 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public void addToFriend(Integer userId, Integer friendId) {
-
         jdbcTemplate.update("INSERT INTO friendship (user_id, friend_id, status) VALUES (?, ?, ?)",
                 userId,
                 friendId,
@@ -127,9 +118,7 @@ public class UserDbStorage implements UserStorage {
     public List<User> getUserFriend(Integer userId) {
         String sql = "SELECT u.* FROM friendship f JOIN users u ON f.friend_id = u.user_id WHERE f.user_id = ?";
 
-
-
-        List <User> list = jdbcTemplate.query(sql, new Object[]{userId},
+        List<User> list = jdbcTemplate.query(sql, new Object[]{userId},
                 (resultSet, i) -> new User(
                         resultSet.getInt("user_id"),
                         resultSet.getString("email"),
@@ -137,7 +126,6 @@ public class UserDbStorage implements UserStorage {
                         resultSet.getString("user_name"),
                         resultSet.getDate("birthday").toLocalDate()
                 ));
-
         return list;
     }
 
@@ -164,8 +152,6 @@ public class UserDbStorage implements UserStorage {
     }
 
 
-
-
     static User creatingUser(ResultSet resultSet, int RowNum) throws SQLException {
         User user = new User();
         user.setId(resultSet.getInt("user_id"));
@@ -175,7 +161,6 @@ public class UserDbStorage implements UserStorage {
         user.setBirthday(resultSet.getDate("birthday").toLocalDate());
         return user;
     }
-
 }
 
 
