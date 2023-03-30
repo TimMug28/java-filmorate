@@ -218,34 +218,6 @@ public class FilmDbStorage implements FilmStorage {
         return jdbcTemplate.query(sqlFilmLikesById, (rs, rowNum) -> rs.getInt("user_id"), id);
     }
 
-    @Override
-    public List<Genre> getGenres() {
-        return jdbcTemplate.query("SELECT * FROM genres", FilmDbStorage::makeGenre);
-    }
-
-    @Override
-    public Genre getGenreById(Integer id) {
-        List<Genre> genres = jdbcTemplate.query("SELECT * FROM GENRES WHERE GENRES_ID = ?", FilmDbStorage::makeGenre, id);
-        if (genres.isEmpty() || genres.get(0) == null || !genres.get(0).getId().equals(id)) {
-            throw new NotFoundException(String.format("Не найден Genre с id: %s", id));
-        }
-        return genres.get(0);
-    }
-
-    @Override
-    public List<MPA> getRatings() {
-        return jdbcTemplate.query("SELECT * FROM MPA_ratings", FilmDbStorage::makeMpa);
-    }
-
-    @Override
-    public MPA getRatingById(Integer id) {
-        List<MPA> ratings = jdbcTemplate.query("SELECT * FROM MPA_ratings WHERE rating_id = ?", FilmDbStorage::makeMpa, id);
-        if (ratings.isEmpty() || ratings.get(0) == null || !ratings.get(0).getId().equals(id)) {
-            throw new NotFoundException(String.format("Не найден MPA с id: %s", id));
-        }
-        return ratings.get(0);
-    }
-
     static MPA makeMpa(ResultSet rs, int rowNum) throws SQLException {
         return new MPA(
                 rs.getInt("rating_id"),

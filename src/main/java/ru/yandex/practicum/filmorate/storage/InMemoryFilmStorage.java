@@ -5,8 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.model.MPA;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
@@ -72,26 +70,6 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Collection<Film> getPopularFilmCount(int count) {
-        return null;
-    }
-
-    @Override
-    public List<Genre> getGenres() {
-        return null;
-    }
-
-    @Override
-    public Genre getGenreById(Integer id) {
-        return null;
-    }
-
-    @Override
-    public List<MPA> getRatings() {
-        return null;
-    }
-
-    @Override
-    public MPA getRatingById(Integer id) {
         return null;
     }
 }
