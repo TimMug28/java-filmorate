@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import ru.yandex.practicum.filmorate.DAO.UserDbStorage;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
@@ -18,12 +17,13 @@ import java.util.*;
 @Service
 public class UserService {
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
-private final UserStorage userStorage;
+    private final UserStorage userStorage;
 
     @Autowired
     public UserService(@Qualifier("UserDbStorage") UserStorage userStorage) {
         this.userStorage = userStorage;
     }
+
     public Collection<User> getUsersValue() {
         return userStorage.getUsersValue();
     }
@@ -128,31 +128,4 @@ private final UserStorage userStorage;
             throw new ValidationException("Birthday must be less or equal to present time");
         }
     }
-
-    public static void validateCreation(List<Long> userIdList, User user) throws ValidationException {
-        if (user.getId() != null) {
-            if (userIdList.contains(user.getId())) {
-                throw new ValidationException("User is already created");
-            }
-        }
-    }
-
-    public static void validateUpdate(List<Long> userIdList, User user)
-            throws ValidationException, NotFoundException {
-        if(user.getId() == null) {
-            log.error("Film has not been created yet: {}", user);
-            throw new ValidationException("User must be created firstly");
-        }
-        if (!userIdList.contains(user.getId())) {
-            log.error("Film has not been created yet: {}", user);
-            throw new NotFoundException("User must be created firstly");
-        }
-    }
-
-    public static void validateExist(List<Long> userIdList, Long id) throws NotFoundException {
-        if(!userIdList.contains(id)) {
-            throw new NotFoundException(String.format("User with %s is not found", id));
-        }
-    }
-
 }

@@ -2,11 +2,14 @@ package ru.yandex.practicum.filmorate.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.MPA;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import javax.validation.Valid;
 import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping
@@ -51,5 +54,25 @@ public class FilmController {
     @GetMapping("/films/popular")
     public Collection<Film> getPopularFilmCount(@RequestParam(defaultValue = "10") Integer count) {
         return filmService.getPopularFilmCount(count);
+    }
+
+    @GetMapping("/genres")
+    public List<Genre> findAllGenres() {
+        return filmService.getGenres();
+    }
+
+    @GetMapping("/genres/{id}")
+    public Genre findGenreById(@PathVariable(name = "id") Integer id) {
+        return filmService.getGenreById(id);
+    }
+
+    @GetMapping("/mpa")
+    public List<MPA> findAllRatings() {
+        return filmService.getRatings();
+    }
+
+    @GetMapping("/mpa/{id}")
+    public MPA findRatingById(@PathVariable(name = "id") Integer id) {
+        return filmService.getRatingById(id);
     }
 }

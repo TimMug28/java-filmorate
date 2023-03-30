@@ -57,6 +57,12 @@ public class Film {
         this.duration = duration;
         this.mpa = mpa;
     }
+    public Film(String name, String description, LocalDate releaseDate, int duration) {
+        this.name = name;
+        this.description = description;
+        setReleaseDate(releaseDate);
+        this.duration = duration;
+    }
 
     public void setReleaseDate(LocalDate releaseDate) {
         if (releaseDate.isBefore(LocalDate.of(1895, 12, 28))) {

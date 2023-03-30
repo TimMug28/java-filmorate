@@ -23,7 +23,6 @@ import java.sql.Date;
 @Repository
 @Qualifier("UserDbStorage")
 public class UserDbStorage implements UserStorage {
-
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -118,7 +117,7 @@ public class UserDbStorage implements UserStorage {
     public List<User> getUserFriend(Integer userId) {
         String sql = "SELECT u.* FROM friendship f JOIN users u ON f.friend_id = u.user_id WHERE f.user_id = ?";
 
-        List<User> list = jdbcTemplate.query(sql, new Object[]{userId},
+        return jdbcTemplate.query(sql, new Object[]{userId},
                 (resultSet, i) -> new User(
                         resultSet.getInt("user_id"),
                         resultSet.getString("email"),
@@ -126,7 +125,6 @@ public class UserDbStorage implements UserStorage {
                         resultSet.getString("user_name"),
                         resultSet.getDate("birthday").toLocalDate()
                 ));
-        return list;
     }
 
 
@@ -134,7 +132,6 @@ public class UserDbStorage implements UserStorage {
     public void deleteFriend(Integer userId, Integer friendId) {
         jdbcTemplate.update("DELETE FROM friendship WHERE (user_id = ? AND friend_id = ?) OR (user_id = ? AND friend_id = ?);", userId, friendId, friendId, userId);
     }
-
 
     @Override
     public List<User> getListOfMutualFriends(Integer id, Integer otherId) {

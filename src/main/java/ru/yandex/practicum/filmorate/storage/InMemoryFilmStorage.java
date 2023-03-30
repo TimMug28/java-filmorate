@@ -5,6 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.MPA;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
@@ -61,13 +63,11 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Film installingLike(Integer filmId, Integer userId) {
-
-        return null ;
+        return null;
     }
 
     @Override
     public void deleteLike(Integer filmId, Integer userId) {
-
     }
 
     @Override
@@ -75,7 +75,23 @@ public class InMemoryFilmStorage implements FilmStorage {
         return null;
     }
 
-    private Collection<Film> getTopNFilms(List<Film> films, int n) {
+    @Override
+    public List<Genre> getGenres() {
+        return null;
+    }
+
+    @Override
+    public Genre getGenreById(Integer id) {
+        return null;
+    }
+
+    @Override
+    public List<MPA> getRatings() {
+        return null;
+    }
+
+    @Override
+    public MPA getRatingById(Integer id) {
         return null;
     }
 }

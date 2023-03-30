@@ -25,7 +25,7 @@ public class UserController {
 
     @PostMapping("/users")
     public User createUser(@Valid @RequestBody User user) {
-       return userService.createUser(user);
+        return userService.createUser(user);
     }
 
     @PutMapping("/users")
@@ -35,7 +35,7 @@ public class UserController {
 
     @GetMapping("/users/{id}")
     public User getUser(@Valid @PathVariable("id") Integer id) {
-        if(id == 1 ){
+        if (id == 1) {
             return userService.findUserById(id);
         }
         return userService.findUserById(id);
@@ -43,7 +43,7 @@ public class UserController {
 
     @PutMapping("/users/{id}/friends/{friendId}")
     public void addingToFriends(@Valid @PathVariable("id") Integer userId, @PathVariable("friendId") Integer friendId) {
-         userService.addToFriend(userId, friendId);
+        userService.addToFriend(userId, friendId);
     }
 
     @DeleteMapping("/users/{id}/friends/{friendId}")
