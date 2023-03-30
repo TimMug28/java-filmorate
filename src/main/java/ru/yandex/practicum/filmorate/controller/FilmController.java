@@ -30,9 +30,6 @@ public class FilmController {
 
     @PutMapping("/films")
     public Film updateFilm(@Valid @RequestBody Film film) {
-        if(film.getId() == 9999){
-            return filmService.updateFilm(film);
-        }
         return filmService.updateFilm(film);
     }
 
