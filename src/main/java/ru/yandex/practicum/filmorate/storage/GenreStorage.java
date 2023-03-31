@@ -10,5 +10,4 @@ public interface GenreStorage {
     public List<Genre> getGenres();
 
     public Genre getGenreById(Integer id);
-
 }

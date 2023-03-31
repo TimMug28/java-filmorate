@@ -35,9 +35,6 @@ public class UserController {
 
     @GetMapping("/users/{id}")
     public User getUser(@Valid @PathVariable("id") Integer id) {
-        if (id == 1) {
-            return userService.findUserById(id);
-        }
         return userService.findUserById(id);
     }
 

@@ -29,7 +29,7 @@ public class GenreDbStorage implements GenreStorage {
 
     @Override
     public Genre getGenreById(Integer id) {
-        List<Genre> genres = jdbcTemplate.query("SELECT * FROM GENRES WHERE GENRES_ID = ?", GenreDbStorage::makeGenre, id);
+        List<Genre> genres = jdbcTemplate.query("SELECT * FROM genres WHERE genres_id = ?", GenreDbStorage::makeGenre, id);
         if (genres.isEmpty() || genres.get(0) == null || !genres.get(0).getId().equals(id)) {
             throw new NotFoundException(String.format("Не найден Genre с id: %s", id));
         }

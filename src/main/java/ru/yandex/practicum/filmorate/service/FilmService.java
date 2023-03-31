@@ -39,7 +39,6 @@ public class FilmService {
     }
 
     public Film installingLike(Integer filmId, Integer userId) {
-
         validateLike(filmId, userId);
         return filmStorage.installingLike(filmId, userId);
     }

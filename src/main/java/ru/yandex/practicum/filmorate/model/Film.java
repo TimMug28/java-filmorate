@@ -25,10 +25,8 @@ public class Film {
     private MPA mpa;
     private List<Genre> genres = new ArrayList<>();
 
-
-
-    public Film(Integer id, String name, String description, LocalDate releaseDate, Integer duration,MPA mpa,
-               List <Genre> genres ) {
+    public Film(Integer id, String name, String description, LocalDate releaseDate, Integer duration, MPA mpa,
+                List<Genre> genres) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -39,8 +37,8 @@ public class Film {
 
     }
 
-    public Film(String name, String description, LocalDate releaseDate, Integer duration,MPA mpa,
-                List <Genre> genres ) {
+    public Film(String name, String description, LocalDate releaseDate, Integer duration, MPA mpa,
+                List<Genre> genres) {
         this.name = name;
         this.description = description;
         setReleaseDate(releaseDate);
@@ -57,6 +55,7 @@ public class Film {
         this.duration = duration;
         this.mpa = mpa;
     }
+
     public Film(String name, String description, LocalDate releaseDate, int duration) {
         this.name = name;
         this.description = description;

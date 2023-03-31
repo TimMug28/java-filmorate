@@ -14,7 +14,7 @@ import java.util.Set;
 @NoArgsConstructor
 public class User {
     private Integer id;
-    @Email (message = "Введенное значение не является адресом электронной почты.")
+    @Email(message = "Введенное значение не является адресом электронной почты.")
     private String email;
     @NotBlank
     private String login;
@@ -42,7 +42,7 @@ public class User {
         this.likeFilms = new HashSet<>();
     }
 
-    public User(String email, String login, String name, LocalDate birthday, Set <Integer> friends, Set <Integer> likeFilms) {
+    public User(String email, String login, String name, LocalDate birthday, Set<Integer> friends, Set<Integer> likeFilms) {
         this.email = email;
         this.login = login;
         this.name = name;
@@ -52,17 +52,19 @@ public class User {
     }
 
 
-    public void setFriends (Integer id){
+    public void setFriends(Integer id) {
         friends.add(id);
     }
-    public void deleteFriends(Integer id){
+
+    public void deleteFriends(Integer id) {
         friends.remove(id);
     }
 
-    public void setLikeFilms (Integer filmId){
+    public void setLikeFilms(Integer filmId) {
         likeFilms.add(filmId);
     }
-    public void deleteLikeFilm(Integer filmId){
+
+    public void deleteLikeFilm(Integer filmId) {
         likeFilms.remove(filmId);
     }
 }

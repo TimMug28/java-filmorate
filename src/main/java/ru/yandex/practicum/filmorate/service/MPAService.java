@@ -11,7 +11,6 @@ import ru.yandex.practicum.filmorate.storage.MPAStorage;
 
 import java.util.List;
 
-
 @Service
 public class MPAService {
     private static final Logger log = LoggerFactory.getLogger(UserService.class);

@@ -50,7 +50,6 @@ public class UserService {
         return userStorage.findUserById(id);
     }
 
-
     public void addToFriend(Integer userId, Integer friendId) {
         validateAdd(userId, friendId);
         userStorage.addToFriend(userId, friendId);

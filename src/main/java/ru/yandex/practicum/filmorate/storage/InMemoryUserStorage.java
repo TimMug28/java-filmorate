@@ -34,7 +34,7 @@ public class InMemoryUserStorage implements UserStorage {
         users.put(user.getId(), user);
         log.debug("Данные добавлены для пользователя {}.", user.getId());
         return user;
-        }
+    }
 
     @Override
     public User updateUser(User user) {

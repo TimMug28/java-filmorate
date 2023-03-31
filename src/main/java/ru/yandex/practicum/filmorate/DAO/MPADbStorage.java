@@ -15,7 +15,6 @@ import java.util.*;
 @Repository
 @Qualifier("MPADbStorage")
 public class MPADbStorage implements MPAStorage {
-
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -25,19 +24,19 @@ public class MPADbStorage implements MPAStorage {
 
     @Override
     public List<MPA> getRatings() {
-        return jdbcTemplate.query("SELECT * FROM MPA_ratings", MPADbStorage::makeMpa);
+        return jdbcTemplate.query("SELECT * FROM MPA_ratings", MPADbStorage::createMpa);
     }
 
     @Override
     public MPA getRatingById(Integer id) {
-        List<MPA> ratings = jdbcTemplate.query("SELECT * FROM MPA_ratings WHERE rating_id = ?", MPADbStorage::makeMpa, id);
+        List<MPA> ratings = jdbcTemplate.query("SELECT * FROM MPA_ratings WHERE rating_id = ?", MPADbStorage::createMpa, id);
         if (ratings.isEmpty() || ratings.get(0) == null || !ratings.get(0).getId().equals(id)) {
             throw new NotFoundException(String.format("Не найден MPA с id: %s", id));
         }
         return ratings.get(0);
     }
 
-    static MPA makeMpa(ResultSet rs, int rowNum) throws SQLException {
+    static MPA createMpa(ResultSet rs, int rowNum) throws SQLException {
         return new MPA(
                 rs.getInt("rating_id"),
                 rs.getString("rating_name")

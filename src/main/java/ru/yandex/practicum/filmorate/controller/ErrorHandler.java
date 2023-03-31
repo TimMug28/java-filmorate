@@ -28,6 +28,4 @@ public class ErrorHandler {
     public ErrorResponse handleError(Exception e) {
         return new ErrorResponse("error", "INTERNAL_SERVER_ERROR");
     }
-
-
 }

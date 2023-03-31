@@ -69,7 +69,6 @@ public class UserDbStorage implements UserStorage {
         return users;
     }
 
-
     @Override
     public User findUserById(Integer id) {
         String sql = "SELECT user_id, email, login, user_name, birthday FROM users WHERE user_id = ?";
@@ -87,7 +86,6 @@ public class UserDbStorage implements UserStorage {
             return null;
         }
     }
-
 
     @Override
     public User updateUser(User user) {
@@ -116,7 +114,6 @@ public class UserDbStorage implements UserStorage {
     @Override
     public List<User> getUserFriend(Integer userId) {
         String sql = "SELECT u.* FROM friendship f JOIN users u ON f.friend_id = u.user_id WHERE f.user_id = ?";
-
         return jdbcTemplate.query(sql, new Object[]{userId},
                 (resultSet, i) -> new User(
                         resultSet.getInt("user_id"),
@@ -126,7 +123,6 @@ public class UserDbStorage implements UserStorage {
                         resultSet.getDate("birthday").toLocalDate()
                 ));
     }
-
 
     @Override
     public void deleteFriend(Integer userId, Integer friendId) {
@@ -147,7 +143,6 @@ public class UserDbStorage implements UserStorage {
         }
         return friendsNames;
     }
-
 
     static User creatingUser(ResultSet resultSet, int RowNum) throws SQLException {
         User user = new User();
