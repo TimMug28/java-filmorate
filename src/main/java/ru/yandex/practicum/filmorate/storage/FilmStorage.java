@@ -15,7 +15,7 @@ public interface FilmStorage {
 
     public Film installingLike(Integer FilmId, Integer userId);
 
-    public void deleteLike(Integer FilmId, Integer userId);
+    public void deleteLike(Integer filmId, Integer userId);
 
-    public Collection <Film> getPopularFilmCount (int count);
+    public Collection<Film> getPopularFilmCount(int count);
 }
