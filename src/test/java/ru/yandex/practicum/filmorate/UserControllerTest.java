@@ -30,7 +30,7 @@ class UserControllerTest {
     @BeforeEach
     public void start() {
 
-        controller = new UserController( new UserService(new InMemoryUserStorage()));
+        controller = new UserController(new UserService(new InMemoryUserStorage()));
         createUsers();
     }
 
@@ -70,7 +70,7 @@ class UserControllerTest {
         controller.createUser(user);
         controller.createUser(user1);
         controller.createUser(user2);
-        controller.addingToFriends(user.getId(),user1.getId());
+        controller.addingToFriends(user.getId(), user1.getId());
         List<User> friends = controller.getUserFriend(user.getId());
         assertEquals(List.of(user1), friends, "Пользователь не найден");
     }
@@ -81,9 +81,9 @@ class UserControllerTest {
         controller.createUser(user);
         controller.createUser(user1);
         controller.createUser(user2);
-        controller.addingToFriends(user.getId(),user1.getId());
+        controller.addingToFriends(user.getId(), user1.getId());
         Collection<User> users = controller.getUsers();
-        controller.addingToFriends(user.getId(),user2.getId());
+        controller.addingToFriends(user.getId(), user2.getId());
         controller.deleteFriends(user.getId(), user1.getId());
         List<User> friends = controller.getUserFriend(user.getId());
         assertEquals(List.of(user2), friends, "Пользователь не удалён");
@@ -95,8 +95,8 @@ class UserControllerTest {
         controller.createUser(user);
         controller.createUser(user1);
         controller.createUser(user2);
-        controller.addingToFriends(user.getId(),user1.getId());
-        controller.addingToFriends(user.getId(),user2.getId());
+        controller.addingToFriends(user.getId(), user1.getId());
+        controller.addingToFriends(user.getId(), user2.getId());
         List<User> friends = controller.getUserFriend(user.getId());
         assertEquals(List.of(user1, user2), friends, "Пользователь не найден");
     }
@@ -107,8 +107,8 @@ class UserControllerTest {
         controller.createUser(user);
         controller.createUser(user1);
         controller.createUser(user2);
-        controller.addingToFriends(user.getId(),user1.getId());
-        controller.addingToFriends(user.getId(),user2.getId());
+        controller.addingToFriends(user.getId(), user1.getId());
+        controller.addingToFriends(user.getId(), user2.getId());
         List<User> friends = controller.getListOfMutualFriends(user1.getId(), user2.getId());
         assertEquals(List.of(user), friends, "Общие друзья не найдены");
     }
