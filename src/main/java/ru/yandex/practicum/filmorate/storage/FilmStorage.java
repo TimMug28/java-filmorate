@@ -13,7 +13,7 @@ public interface FilmStorage {
 
     public Film getFilmById(Integer id);
 
-    public Film installingLike(Integer FilmId, Integer userId);
+    public Film installingLike(Integer filmId, Integer userId);
 
     public void deleteLike(Integer filmId, Integer userId);
 
