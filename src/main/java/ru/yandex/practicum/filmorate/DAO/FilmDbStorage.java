@@ -31,19 +31,33 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public Collection<Film> getFilms() {
-        String sqlFilmById = "SELECT * FROM films LEFT OUTER JOIN MPA_ratings ON films.rating = MPA_ratings.rating_id";
-        List<Film> films = jdbcTemplate.query(sqlFilmById, FilmDbStorage::createFilm);
+        String sqlFilmsWithGenres = "SELECT " +
+                "f.film_id, f.film_name, f.description, f.release_date, f.duration, " +
+                "m.rating_id, m.rating_name, " +
+                "g.genres_id, g.genre " +
+                "FROM films f " +
+                "JOIN MPA_ratings m ON f.rating = m.rating_id " +
+                "LEFT JOIN film_genres fg ON f.film_id = fg.film_id " +
+                "LEFT JOIN genres g ON fg.genres_id = g.genres_id " +
+                "ORDER BY f.film_id";
 
-        for (Film film : films) {
-            String sqlFilmGenres = "SELECT * " +
-                    "FROM film_genres LEFT OUTER JOIN genres " +
-                    "ON genres.genres_id = film_genres.genres_id " +
-                    "WHERE film_id = ?";
-            List<Genre> filmGenres = jdbcTemplate.query(
-                    sqlFilmGenres, FilmDbStorage::createGenre, film.getId());
-            film.setGenres(filmGenres);
-        }
-        return films;
+        Map<Integer, Film> filmMap = new LinkedHashMap<>();
+        jdbcTemplate.query(sqlFilmsWithGenres, rs -> {
+            int filmId = rs.getInt("film_id");
+            Film film = filmMap.get(filmId);
+            if (film == null) {
+                film = createFilm(rs, 0);
+                filmMap.put(filmId, film);
+            }
+
+            Integer genreId = rs.getInt("genres_id");
+            if (!rs.wasNull()) {
+                String genreName = rs.getString("genre");
+                Genre genre = new Genre(genreId, genreName);
+                film.getGenres().add(genre);
+            }
+        });
+        return filmMap.values();
     }
 
     @Override
@@ -215,21 +229,21 @@ public class FilmDbStorage implements FilmStorage {
         return jdbcTemplate.query(sqlFilmLikesById, (rs, rowNum) -> rs.getInt("user_id"), id);
     }
 
-    static MPA createMpa(ResultSet rs, int rowNum) throws SQLException {
+    private static MPA createMpa(ResultSet rs, int rowNum) throws SQLException {
         return new MPA(
                 rs.getInt("rating_id"),
                 rs.getString("rating_name")
         );
     }
 
-    static Genre createGenre(ResultSet rs, int rowNum) throws SQLException {
+    private static Genre createGenre(ResultSet rs, int rowNum) throws SQLException {
         return new Genre(
                 rs.getInt("genres_id"),
                 rs.getString("genre")
         );
     }
 
-    public static Film createFilm(ResultSet rs, int rowNum) throws SQLException {
+    private static Film createFilm(ResultSet rs, int rowNum) throws SQLException {
         Film film = new Film();
         film.setId(rs.getInt("film_id"));
         film.setName(rs.getString("film_name"));
