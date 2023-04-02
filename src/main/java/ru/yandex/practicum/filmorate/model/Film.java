@@ -7,8 +7,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -22,33 +22,45 @@ public class Film {
     private LocalDate releaseDate;
     @PositiveOrZero
     private Integer duration;
-    private Set<Integer> likes = new HashSet<>();
+    private MPA mpa;
+    private List<Genre> genres = new ArrayList<>();
 
-
-    public Film(Integer id, String name, String description, LocalDate releaseDate, Integer duration) {
+    public Film(Integer id, String name, String description, LocalDate releaseDate, Integer duration, MPA mpa,
+                List<Genre> genres) {
         this.id = id;
         this.name = name;
         this.description = description;
         setReleaseDate(releaseDate);
         this.duration = duration;
-        this.likes = new HashSet<>();
+        this.mpa = mpa;
+        this.genres = genres;
+
     }
 
-    public Film(String name, String description, LocalDate releaseDate, Integer duration) {
+    public Film(String name, String description, LocalDate releaseDate, Integer duration, MPA mpa,
+                List<Genre> genres) {
         this.name = name;
         this.description = description;
         setReleaseDate(releaseDate);
         this.duration = duration;
-        this.likes = new HashSet<>();
+        this.mpa = mpa;
+        this.genres = genres;
+
     }
 
-    public Film(Integer id, String name, String description, LocalDate releaseDate, Integer duration, Set<Integer> likes) {
-        this.id = id;
+    public Film(String name, String description, LocalDate releaseDate, int duration, MPA mpa) {
         this.name = name;
         this.description = description;
         setReleaseDate(releaseDate);
         this.duration = duration;
-        this.likes = likes;
+        this.mpa = mpa;
+    }
+
+    public Film(String name, String description, LocalDate releaseDate, int duration) {
+        this.name = name;
+        this.description = description;
+        setReleaseDate(releaseDate);
+        this.duration = duration;
     }
 
     public void setReleaseDate(LocalDate releaseDate) {
@@ -56,17 +68,5 @@ public class Film {
             throw new ValidationException("Фильм не может быть выпущен раньше 28 декабря 1895 года");
         }
         this.releaseDate = releaseDate;
-    }
-
-    public void setLikes(Integer id) {
-        likes.add(id);
-    }
-
-    public void deleteLikes(Integer count) {
-        likes.remove(count);
-    }
-
-    public Integer getLikesSize() {
-        return getLikes().size();
     }
 }

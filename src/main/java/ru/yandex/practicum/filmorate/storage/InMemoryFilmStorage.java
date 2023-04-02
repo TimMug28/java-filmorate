@@ -5,8 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.Service.FilmService;
-import ru.yandex.practicum.filmorate.Service.UserService;
+import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 
@@ -51,42 +51,25 @@ public class InMemoryFilmStorage implements FilmStorage {
         updateFilm.setDuration(film.getDuration());
         films.put(film.getId(), updateFilm);
         log.debug("Обновлены данные фильма {}.", updateFilm.getId());
-        return updateFilm;
+        return film;
     }
 
     @Override
-    public Film findFilmById(Integer id) {
+    public Film getFilmById(Integer id) {
         return films.get(id);
     }
 
     @Override
     public Film installingLike(Integer filmId, Integer userId) {
-        Film film = films.get(filmId);
-        film.setLikes(userId);
-        return film;
+        return null;
     }
 
     @Override
-    public Film deleteLike(Integer filmId, Integer userId) {
-        Film film = films.get(filmId);
-        film.deleteLikes(userId);
-        return film;
+    public void deleteLike(Integer filmId, Integer userId) {
     }
 
     @Override
     public Collection<Film> getPopularFilmCount(int count) {
-        List<Film> popular = new ArrayList<>(films.values());
-        return getTopNFilms(popular, count);
-    }
-
-    private List<Film> getTopNFilms(List<Film> films, int n) {
-        Comparator<Film> comparator = new Comparator<Film>() {
-            @Override
-            public int compare(Film film1, Film film2) {
-                return film2.getLikes().size() - film1.getLikes().size();
-            }
-        };
-        Collections.sort(films, comparator);
-        return films.subList(0, Math.min(n, films.size()));
+        return null;
     }
 }

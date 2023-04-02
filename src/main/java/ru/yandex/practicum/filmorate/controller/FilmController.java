@@ -2,7 +2,7 @@ package ru.yandex.practicum.filmorate.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.Service.FilmService;
+import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import javax.validation.Valid;
@@ -35,7 +35,7 @@ public class FilmController {
 
     @GetMapping("/films/{id}")
     public Film getFilm(@Valid @PathVariable("id") Integer filmId) {
-        return filmService.findFilmById(filmId);
+        return filmService.getFilmById(filmId);
     }
 
     @PutMapping("/films/{id}/like/{userId}")
@@ -44,8 +44,8 @@ public class FilmController {
     }
 
     @DeleteMapping("/films/{id}/like/{userId}")
-    public Film deleteLike(@Valid @PathVariable("id") Integer filmId, @PathVariable("userId") Integer userId) {
-        return filmService.deleteLike(filmId, userId);
+    public void deleteLike(@Valid @PathVariable("id") Integer filmId, @PathVariable("userId") Integer userId) {
+        filmService.deleteLike(filmId, userId);
     }
 
     @GetMapping("/films/popular")

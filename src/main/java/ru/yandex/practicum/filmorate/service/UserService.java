@@ -1,9 +1,11 @@
-package ru.yandex.practicum.filmorate.Service;
+package ru.yandex.practicum.filmorate.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
@@ -18,7 +20,7 @@ public class UserService {
     private final UserStorage userStorage;
 
     @Autowired
-    public UserService(UserStorage userStorage) {
+    public UserService(@Qualifier("UserDbStorage") UserStorage userStorage) {
         this.userStorage = userStorage;
     }
 
@@ -48,15 +50,14 @@ public class UserService {
         return userStorage.findUserById(id);
     }
 
-
-    public User addToFriend(Integer userId, Integer friendId) {
+    public void addToFriend(Integer userId, Integer friendId) {
         validateAdd(userId, friendId);
-        return userStorage.addToFriend(userId, friendId);
+        userStorage.addToFriend(userId, friendId);
     }
 
-    public User deleteFriend(Integer userId, Integer friendId) {
+    public void deleteFriend(Integer userId, Integer friendId) {
         validateAdd(userId, friendId);
-        return userStorage.deleteFriend(userId, friendId);
+        userStorage.deleteFriend(userId, friendId);
     }
 
     public List<User> getUserFriend(Integer id) {
@@ -105,6 +106,25 @@ public class UserService {
         if (userStorage.findUserById(friendId) == null) {
             log.error("Не найден пользователь c id {}.", friendId);
             throw new NotFoundException("Пользователь " + friendId);
+        }
+    }
+
+    public static void validateUser(User user) throws ValidationException {
+        if (!StringUtils.hasText(user.getEmail()) || !user.getEmail().contains("@")) {
+            log.error("User has incorrect email: {}", user);
+            throw new ValidationException("Email of the user must be indicated");
+        }
+        if (!StringUtils.hasText(user.getLogin()) || StringUtils.containsWhitespace(user.getLogin())) {
+            log.error("User has incorrect login: {}", user);
+            throw new ValidationException("Login of the user must be indicated and have no whitespaces");
+        }
+        if (!StringUtils.hasText(user.getName())) {
+            log.warn("User has blank or null name: {}", user);
+            user.setName(user.getLogin());
+        }
+        if (user.getBirthday().isAfter(LocalDate.now())) {
+            log.error("User has incorrect birthday: {}", user);
+            throw new ValidationException("Birthday must be less or equal to present time");
         }
     }
 }
